@@ -1,17 +1,17 @@
 import "./globals.js";
 import { getSelectedServer, initServerSelection } from "./network/serverSelection.js";
 
-var GLOBAL_SPEED = 0.006;
-var VIEWPORT_RADIUS = 30;
-var MAX_ZOOM = 430;
-// var MAX_ZOOM = 10000;
-var BLOCKS_ON_SCREEN = 1100;
-// var BLOCKS_ON_SCREEN = 20000;
-var WAIT_FOR_DISCONNECTED_MS = 1000;
-var USERNAME_SIZE = 6;
+export var GLOBAL_SPEED = 0.006;
+export var VIEWPORT_RADIUS = 30;
+export var MAX_ZOOM = 430;
+// export var MAX_ZOOM = 10000;
+export var BLOCKS_ON_SCREEN = 1100;
+// export var BLOCKS_ON_SCREEN = 20000;
+export var WAIT_FOR_DISCONNECTED_MS = 1000;
+export var USERNAME_SIZE = 6;
 
 //stackoverflow.com/a/15666143/3625298
-var MAX_PIXEL_RATIO = (function () {
+export var MAX_PIXEL_RATIO = (function () {
 	var ctx = document.createElement("canvas").getContext("2d"),
 		dpr = window.devicePixelRatio || 1,
 		bsr = ctx.webkitBackingStorePixelRatio ||
@@ -23,13 +23,13 @@ var MAX_PIXEL_RATIO = (function () {
 	return dpr / bsr;
 })();
 
-var DeviceTypes = {
+export var DeviceTypes = {
 	DESKTOP: 0,
 	IOS: 1,
 	ANDROID: 2,
 };
 
-var deviceType = (function () {
+export var deviceType = (function () {
 	if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
 		return DeviceTypes.IOS;
 	}
@@ -40,9 +40,9 @@ var deviceType = (function () {
 })();
 testHashForMobile();
 
-var patreonQueryWasFound = checkPatreonQuery();
+export var patreonQueryWasFound = checkPatreonQuery();
 
-function redirectQuery() {
+export function redirectQuery() {
 	var hashIndex = location.href.indexOf("#");
 	var queryIndex = location.href.indexOf("?");
 	if ((queryIndex >= 0 && (hashIndex == -1 || queryIndex < hashIndex)) || isIframe()) {
@@ -82,7 +82,7 @@ function redirectQuery() {
 }
 redirectQuery();
 
-function isIframe() {
+export function isIframe() {
 	try {
 		return window.self !== window.top;
 	} catch (e) {
@@ -94,13 +94,13 @@ function isIframe() {
 // While ideally these variables should all be made local,
 // I'm worried some locations actually rely on them not being local.
 // So for now these are all global, but we should slowly try to get rid of these.
-var i, w;
+export var i, w;
 
-var IS_SECURE = location.protocol.indexOf("https") >= 0;
+export var IS_SECURE = location.protocol.indexOf("https") >= 0;
 // if(IS_SECURE && (["#nohttpsredirect", "#pledged"].indexOf(location.hash) < 0) && !isIframe() && !patreonQueryWasFound){
 // 	location.protocol = "http:";
 // }
-var SECURE_WS = IS_SECURE ? "wss://" : "ws://";
+export var SECURE_WS = IS_SECURE ? "wss://" : "ws://";
 
 // var flashIsInstalled = false;
 // try {
@@ -109,30 +109,31 @@ var SECURE_WS = IS_SECURE ? "wss://" : "ws://";
 // 	flashIsInstalled = ('undefined' != typeof navigator.mimeTypes['application/x-shockwave-flash']);
 // }
 // ga('set', 'dimension1', flashIsInstalled ? 'yes': 'no');
-var SKIN_BLOCK_COUNT = 13;
-var SKIN_PATTERN_COUNT = 28;
-var ws = null, mainCanvas, ctx, prevTimeStamp = null, blocks = [], players = [];
-var camPos = [0, 0], camPosSet = false, camPosPrevFrame = [0, 0], myNameAlphaTimer = 0;
-var myPos = null,
-	myPlayer = null,
+export var SKIN_BLOCK_COUNT = 13;
+export var SKIN_PATTERN_COUNT = 28;
+export var ws = null, mainCanvas, ctx, prevTimeStamp = null, blocks = [];
+window.players = [];
+export var camPos = [0, 0], camPosSet = false, camPosPrevFrame = [0, 0], myNameAlphaTimer = 0;
+export var myPos = null,
 	changeDirAt = null,
 	changeDirAtIsHorizontal = false,
 	myNextDir = 0,
 	lastChangedDirPos = null;
-var lastClientsideMoves = [],
+window.myPlayer = null;
+export var lastClientsideMoves = [],
 	trailPushesDuringRequest = [],
 	isRequestingMyTrail = false,
 	skipTrailRequestResponse = false;
-var mapSize = 2000, closedBecauseOfDeath = false, minimapCtx, beginScreenVisible = true, wsOnOpenTime;
-var minimapCanvas;
-var canvasQuality = 1,
+export var mapSize = 2000, closedBecauseOfDeath = false, minimapCtx, beginScreenVisible = true, wsOnOpenTime;
+export var minimapCanvas;
+export var canvasQuality = 1,
 	currentDtCap = 0,
 	totalDeltaTimeFromCap = 0,
 	deltaTime = 16.66,
 	lerpedDeltaTime = 16.66,
 	missedFrames = [],
 	gainedFrames = [];
-var myScoreElem,
+export var myScoreElem,
 	myKillsElem,
 	myRealScoreElem,
 	myRankElem,
@@ -140,8 +141,8 @@ var myScoreElem,
 	myRankSent = false,
 	totalPlayersElem,
 	totalPlayers = 0;
-var leaderboardElem, leaderboardDivElem, leaderboardHidden = localStorage.leaderboardHidden == "true";
-var miniMapPlayer,
+export var leaderboardElem, leaderboardDivElem, leaderboardHidden = localStorage.leaderboardHidden == "true";
+export var miniMapPlayer,
 	playUI,
 	beginScreen,
 	notificationElem,
@@ -149,58 +150,54 @@ var miniMapPlayer,
 	nameInput,
 	lastNameValue = "",
 	lastNameChangeCheck = 0;
-var scoreStatTarget = 25, scoreStat = 25, realScoreStatTarget = 25, realScoreStat = 25;
-var linesCanvas, linesCtx, tempCanvas, tempCtx;
-var showCouldntConnectAfterTransition = false, playingAndReady = false, canRunAds = false;
-var transitionCanvas,
+export var scoreStatTarget = 25, scoreStat = 25, realScoreStatTarget = 25, realScoreStat = 25;
+export var linesCanvas, linesCtx, tempCanvas, tempCtx;
+export var showCouldntConnectAfterTransition = false;
+window.playingAndReady = false;
+export var canRunAds = false;
+export var transitionCanvas,
 	tCtx,
 	transitionTimer = 0,
 	transitionPrevTimer = 0,
 	transitionDirection = 1,
 	transitionText = "GAME OVER";
-var isTransitioning = false, transitionCallback1 = null, transitionCallback2 = null, transitionReverseOnHalf = false;
-var tutorialCanvas, tutCtx, tutorialTimer = 0, tutorialPrevTimer = 0, tutorialBlocks, tutorialPlayers, tutorialText;
-var touchControlsElem;
-var skinButtonCanvas, skinButtonCtx, skinButtonBlocks = [], skinButtonShadow;
-var skinCanvas, skinCtx, skinScreen, skinScreenVisible = false, skinScreenBlocks;
-var titCanvas, titCtx, titleTimer = -1, resetTitleNextFrame = true, titleLastRender = 0;
-var currentTouches = [], doRefreshAfterDie = false, pressedKeys = [];
-var camPosOffset = [0, 0], camRotOffset = 0, camShakeForces = [];
-var honkStartTime, lastHonkTime = 0, honkSfx = null;
-var skipDeathTransition = false, allowSkipDeathTransition = false, deathTransitionTimeout = null;
-var thisServerAvgPing = 0,
+export var isTransitioning = false, transitionCallback1 = null, transitionCallback2 = null, transitionReverseOnHalf = false;
+export var tutorialCanvas, tutCtx, tutorialTimer = 0, tutorialPrevTimer = 0, tutorialBlocks, tutorialPlayers, tutorialText;
+export var touchControlsElem;
+export var skinButtonCanvas, skinButtonCtx, skinButtonBlocks = [], skinButtonShadow;
+export var skinCanvas, skinCtx, skinScreen, skinScreenVisible = false, skinScreenBlocks;
+export var titCanvas, titCtx, titleTimer = -1, resetTitleNextFrame = true, titleLastRender = 0;
+export var currentTouches = [], doRefreshAfterDie = false, pressedKeys = [];
+export var camPosOffset = [0, 0], camRotOffset = 0, camShakeForces = [];
+export var honkStartTime, lastHonkTime = 0, honkSfx = null;
+export var skipDeathTransition = false, allowSkipDeathTransition = false, deathTransitionTimeout = null;
+export var thisServerAvgPing = 0,
 	thisServerDiffPing = 0,
 	thisServerLastPing = 0,
 	lastPingTime = 0,
 	waitingForPing = false;
-var closeNotification = null, connectionLostNotification = null;
-var lastMyPosSetClientSideTime = 0,
+export var closeNotification = null, connectionLostNotification = null;
+export var lastMyPosSetClientSideTime = 0,
 	lastMyPosServerSideTime = 0,
 	lastMyPosSetValidClientSideTime = 0,
 	lastMyPosHasBeenConfirmed = false;
-var uiElems = [], zoom, myColorId, uglyMode = false;
-var hasReceivedChunkThisGame = false, didSendSecondReady = false;
-var lastStatBlocks = 0,
+export var uiElems = [], zoom, myColorId, uglyMode = false;
+export var hasReceivedChunkThisGame = false, didSendSecondReady = false;
+export var lastStatBlocks = 0,
 	lastStatKills = 0,
 	lastStatLbRank = 0,
 	lastStatAlive = 0,
 	lastStatNo1Time = 0,
 	lastStatDeathType = 0,
 	lastStatKiller = "";
-var bestStatBlocks = 0, bestStatKills = 0, bestStatLbRank = 0, bestStatAlive = 0, bestStatNo1Time = 0;
-var lastStatTimer = 0, lastStatCounter = 0, lastStatValueElem, bestStatValueElem;
-var lastMousePos = [0, 0], mouseHidePos = [0, 0];
-var joinButton,
+export var bestStatBlocks = 0, bestStatKills = 0, bestStatLbRank = 0, bestStatAlive = 0, bestStatNo1Time = 0;
+export var lastStatTimer = 0, lastStatCounter = 0, lastStatValueElem, bestStatValueElem;
+export var lastMousePos = [0, 0], mouseHidePos = [0, 0];
+export var joinButton,
 	gamemodeDropDownEl;
-var didConfirmOpenInApp = false;
+export var didConfirmOpenInApp = false;
 
-//adinplay banner ads
-var aiptag = window["aiptag"] = window["aiptag"] || {};
-aiptag.cmd = aiptag.cmd || [];
-aiptag.cmd.display = aiptag.cmd.display || [];
-aiptag.cmd.player = aiptag.cmd.player || [];
-
-var receiveAction = {
+export var receiveAction = {
 	UPDATE_BLOCKS: 1,
 	PLAYER_POS: 2,
 	FILL_AREA: 3,
@@ -226,7 +223,7 @@ var receiveAction = {
 	TEAM_LIFE_COUNT: 23,
 };
 
-var sendAction = {
+export var sendAction = {
 	UPDATE_DIR: 1,
 	SET_USERNAME: 2,
 	SKIN: 3,
@@ -241,7 +238,7 @@ var sendAction = {
 	PATREON_CODE: 12,
 };
 
-var colors = {
+export var colors = {
 	grey: {
 		BG: "#3a342f",
 		brighter: "#4e463f",
@@ -344,7 +341,7 @@ var colors = {
 	},
 };
 
-var titleLines = [
+export var titleLines = [
 	{ //S
 		line: [[86, 82], [50, 57, 25, 99, 65, 105], [110, 110, 80, 158, 42, 129]],
 		speed: 1,
@@ -419,7 +416,7 @@ var titleLines = [
 	},
 ];
 
-function addSocketWrapper() {
+export function addSocketWrapper() {
 	if (typeof WebSocket == "undefined") {
 		return;
 	}
@@ -467,7 +464,7 @@ function addSocketWrapper() {
 }
 addSocketWrapper();
 
-function simpleRequest(url, cb) {
+export function simpleRequest(url, cb) {
 	var req = new XMLHttpRequest();
 	req.onreadystatechange = function () {
 		if (req.readyState == XMLHttpRequest.DONE) {
@@ -482,7 +479,7 @@ function simpleRequest(url, cb) {
 	req.send();
 }
 
-function trackGameStart() {
+export function trackGameStart() {
 	// var idString = "";
 	// if(localStorage.playId){
 	// 	idString = "&id="+localStorage.playId;
@@ -501,7 +498,7 @@ function trackGameStart() {
 	// });
 }
 
-function countPlayGame() {
+export function countPlayGame() {
 	var old = 0;
 	if (localStorage.getItem("totalGamesPlayed") !== null) {
 		old = localStorage.totalGamesPlayed;
@@ -510,7 +507,7 @@ function countPlayGame() {
 	lsSet("totalGamesPlayed", old);
 }
 
-function generateServerLocation(originalLocationObj) {
+export function generateServerLocation(originalLocationObj) {
 	var port = IS_SECURE ? "7998" : "7999";
 	return {
 		pingUrlV4: originalLocationObj.pingIpv4 + "/ping",
@@ -688,7 +685,7 @@ function generateServerLocation(originalLocationObj) {
 	};
 }
 
-function startPingServers() {
+export function startPingServers() {
 	for (var i = 0; i < servers.length; i++) {
 		var thisServer = servers[i];
 		thisServer.initSocket();
@@ -699,7 +696,7 @@ function startPingServers() {
 //gets a block from the specified array,
 //creates it if it doesn't exist yet
 //if array is not specified it will default to the blocks[] array
-function getBlock(x, y, array) {
+export function getBlock(x, y, array) {
 	var block;
 	if (array === undefined) {
 		array = blocks;
@@ -766,107 +763,8 @@ function getBlock(x, y, array) {
 	return block;
 }
 
-//gets a player from the the specified array,
-//creates it if it doesn't exist yet
-//if array is not specified it will default to the players[] array
-function getPlayer(id, array) {
-	var player;
-	if (array === undefined) {
-		array = players;
-	}
-	for (var i = 0; i < array.length; i++) {
-		player = array[i];
-		if (player.id == id) {
-			return player;
-		}
-	}
-
-	//player doesn't exist, create it
-	player = {
-		id: id,
-		pos: [0, 0],
-		drawPos: [-1, -1],
-		drawPosSet: false,
-		serverPos: [0, 0],
-		dir: 0,
-		isMyPlayer: id === 0,
-		isDead: false,
-		deathWasCertain: false,
-		didUncertainDeathLastTick: false,
-		isDeadTimer: 0,
-		uncertainDeathPosition: [0, 0],
-		die: function (deathWasCertain) {
-			deathWasCertain = !!deathWasCertain;
-			if (this.isDead) {
-				this.deathWasCertain = deathWasCertain || this.deathWasCertain;
-			} else {
-				if (deathWasCertain || !this.didUncertainDeathLastTick) {
-					if (!deathWasCertain) {
-						this.didUncertainDeathLastTick = true;
-						this.uncertainDeathPosition = [this.pos[0], this.pos[1]];
-					}
-					this.isDead = true;
-					this.deathWasCertain = deathWasCertain;
-					this.deadAnimParts = [0];
-					this.isDeadTimer = 0;
-					if (this.isMyPlayer) {
-						doCamShakeDir(this.dir);
-					}
-					var prev = 0;
-					while (true) {
-						prev += Math.random() * 0.4 + 0.5;
-						if (prev >= Math.PI * 2) {
-							this.deadAnimParts.push(Math.PI * 2);
-							break;
-						}
-						this.deadAnimParts.push(prev);
-						this.deadAnimPartsRandDist.push(Math.random());
-					}
-				}
-			}
-		},
-		undoDie: function () {
-			this.isDead = false;
-		},
-		deadAnimParts: [],
-		deadAnimPartsRandDist: [],
-		addHitLine: function (pos, color) {
-			this.hitLines.push({
-				pos: pos,
-				vanishTimer: 0,
-				color: color,
-			});
-		},
-		hitLines: [],
-		doHonk: function (time) {
-			this.honkTimer = 0;
-			this.honkMaxTime = time;
-			if (this.name.toLowerCase() == "joris") {
-				if (honkSfx == null) {
-					honkSfx = new Audio("./static/honk.mp3");
-				}
-				honkSfx.play();
-			}
-		},
-		moveRelativeToServerPosNextFrame: false, //if true, lastServerPosSentTime will be used instead of deltatime for one frame
-		lastServerPosSentTime: 0,
-		honkTimer: 0,
-		honkMaxTime: 0,
-		trails: [],
-		name: "",
-		skinBlock: 0,
-		lastBlock: null,
-		hasReceivedPosition: false,
-	};
-	array.push(player);
-	if (player.isMyPlayer) {
-		myPlayer = player;
-	}
-	return player;
-}
-
 //localStorage with ios private mode error handling
-function lsSet(name, value) {
+export function lsSet(name, value) {
 	try {
 		localStorage.setItem(name, value);
 		return true;
@@ -875,7 +773,7 @@ function lsSet(name, value) {
 	}
 }
 
-function checkUsername(name) {
+export function checkUsername(name) {
 	var lower = name.toLowerCase();
 
 	if (lower == "denniskoe") {
@@ -923,19 +821,19 @@ function checkUsername(name) {
 }
 
 //sends name to websocket
-function sendName() {
+export function sendName() {
 	var n = nameInput.value;
 	if (n !== undefined && n !== null && n !== "" && n.trim() !== "") {
 		wsSendMsg(sendAction.SET_USERNAME, n);
 	}
 }
 
-function nameInputOnChange() {
+export function nameInputOnChange() {
 	lsSet("name", nameInput.value);
 }
 
 //sends a legacy message which is required for older servers
-function sendLegacyVersion() {
+export function sendLegacyVersion() {
 	wsSendMsg(sendAction.VERSION, {
 		type: 0,
 		ver: 28,
@@ -943,7 +841,7 @@ function sendLegacyVersion() {
 }
 
 //sends current skin to websocket
-function sendSkin() {
+export function sendSkin() {
 	var blockColor = localStorage.getItem("skinColor");
 	if (blockColor === null) {
 		blockColor = 0;
@@ -958,13 +856,13 @@ function sendSkin() {
 	});
 }
 
-function sendPatreonCode() {
+export function sendPatreonCode() {
 	if (localStorage.patreonLastSplixCode !== "" && localStorage.patreonLastSplixCode !== undefined) {
 		wsSendMsg(sendAction.PATREON_CODE, localStorage.patreonLastSplixCode);
 	}
 }
 
-function parseDirKey(c) {
+export function parseDirKey(c) {
 	var pd = false;
 	//up
 	if (c == 38 || c == 87 || c == 56 || c == 73) {
@@ -1005,8 +903,8 @@ function parseDirKey(c) {
 }
 
 //sends new direction to websocket
-var lastSendDir = -1, lastSendDirTime = 0; //used to prevent spamming buttons
-function sendDir(dir, skipQueue) {
+export var lastSendDir = -1, lastSendDirTime = 0; //used to prevent spamming buttons
+export function sendDir(dir, skipQueue) {
 	// console.log("======sendDir",dir, skipQueue);
 	if (!ws || !myPos) {
 		return false;
@@ -1107,8 +1005,8 @@ function sendDir(dir, skipQueue) {
 	return true;
 }
 
-var sendDirQueue = [];
-function addSendDirQueue(dir, skip) {
+export var sendDirQueue = [];
+export function addSendDirQueue(dir, skip) {
 	// console.log("adding sendDir to queue", dir, skip);
 	if (!skip && sendDirQueue.length < 3) {
 		sendDirQueue.push({
@@ -1118,7 +1016,7 @@ function addSendDirQueue(dir, skip) {
 	}
 }
 
-function changeMyDir(dir, newPos, extendTrail, isClientside) {
+export function changeMyDir(dir, newPos, extendTrail, isClientside) {
 	// console.log("changeMyDir");
 	myPlayer.dir = myNextDir = dir;
 	myPlayer.pos = [newPos[0], newPos[1]];
@@ -1143,13 +1041,13 @@ function changeMyDir(dir, newPos, extendTrail, isClientside) {
 	}
 }
 
-function startRequestMyTrail() {
+export function startRequestMyTrail() {
 	isRequestingMyTrail = true;
 	trailPushesDuringRequest = [];
 	wsSendMsg(sendAction.REQUEST_MY_TRAIL);
 }
 
-function trailPush(player, pos) {
+export function trailPush(player, pos) {
 	if (player.trails.length > 0) {
 		var lastTrail = player.trails[player.trails.length - 1].trail;
 		if (lastTrail.length > 0) {
@@ -1169,11 +1067,11 @@ function trailPush(player, pos) {
 	}
 }
 
-function honkStart() {
+export function honkStart() {
 	honkStartTime = Date.now();
 }
 
-function honkEnd() {
+export function honkEnd() {
 	var now = Date.now();
 	if (now > lastHonkTime) {
 		var time = now - honkStartTime;
@@ -1231,8 +1129,6 @@ window.onload = function () {
 	qualityText = document.getElementById("qualityText");
 	uglyText = document.getElementById("uglyText");
 	lifeBox = document.getElementById("lifeBox");
-	adBox = document.getElementById("adbox");
-	adBox2 = document.getElementById("adbox2");
 
 	window.onkeydown = function (e) {
 		var c = e.keyCode;
@@ -1295,7 +1191,6 @@ window.onload = function () {
 	uiElems.push(document.getElementById("miniMap"));
 	// closeNotification = document.getElementById("closeNotification");
 	// uiElems.push(closeNotification);
-	prerollElem = document.getElementById("preroll");
 
 	nameInput = document.getElementById("nameInput");
 	if (localStorage.name) {
@@ -1355,16 +1250,6 @@ window.onload = function () {
 		initVideoAdsScript();
 	}
 
-	//banner ads
-	if (testPatreonAdsAllowed()) {
-		setUpAdBoxContent();
-		var script = document.createElement("script");
-		script.src = "//api.adinplay.com/libs/aiptag/pub/JTE/splix.io/tag.min.js";
-		script.type = "text/javascript";
-		document.head.appendChild(script);
-		refreshBanner();
-	}
-
 	//best stats
 	bestStatBlocks = Math.max(bestStatBlocks, localStorage.getItem("bestStatBlocks"));
 	bestStatKills = Math.max(bestStatKills, localStorage.getItem("bestStatKills"));
@@ -1390,7 +1275,7 @@ window.onload = function () {
 };
 
 //when WebSocket connection is established
-function onOpen() {
+export function onOpen() {
 	isConnecting = false;
 	sendLegacyVersion();
 	sendPatreonCode();
@@ -1408,24 +1293,24 @@ function onOpen() {
 }
 
 //called when successfully connected and when the transition is full screen
-function onConnectOrMiddleOfTransition() {
+export function onConnectOrMiddleOfTransition() {
 	hideSkinScreen();
 	hideBeginShowMain();
 }
 
 //hides beginScreen and shows the main canvas and ui
-function hideBeginShowMain() {
+export function hideBeginShowMain() {
 	hideBegin();
 	showMainCanvas();
 }
 
-function hideBegin() {
+export function hideBegin() {
 	beginScreen.style.display = "none";
 	beginScreenVisible = false;
 	updateCmpPersistentLinkVisibility();
 }
 
-function showMainCanvas() {
+export function showMainCanvas() {
 	playUI.style.display = null;
 	mainCanvas.style.display = null;
 	if ("ontouchstart" in window) {
@@ -1435,53 +1320,52 @@ function showMainCanvas() {
 	setNotification("");
 }
 
-function setNotification(str) {
+export function setNotification(str) {
 	notificationElem.innerHTML = str;
 	notificationElem.style.display = str ? null : "none";
 }
 
-function showBegin() {
+export function showBegin() {
 	beginScreen.style.display = null;
 	beginScreenVisible = true;
 	updateCmpPersistentLinkVisibility();
 	nameInput.focus();
-	setAdBoxLeft();
 }
 
-function hideMainCanvas() {
+export function hideMainCanvas() {
 	playUI.style.display = "none";
 	mainCanvas.style.display = "none";
 	touchControlsElem.style.display = "none";
 }
 
-function showSkinScreen() {
+export function showSkinScreen() {
 	skinScreenVisible = true;
 	skinScreen.style.display = null;
 }
 
-function hideSkinScreen() {
+export function hideSkinScreen() {
 	skinScreenVisible = false;
 	skinScreen.style.display = "none";
 }
 
-function openSkinScreen() {
+export function openSkinScreen() {
 	hideBegin();
 	showSkinScreen();
 }
 
 //hides main canvas and ui and shows beginScreen
-function showBeginHideMainCanvas() {
+export function showBeginHideMainCanvas() {
 	showBegin();
 	hideMainCanvas();
 }
 
-function showBeginHideSkin() {
+export function showBeginHideSkin() {
 	showBegin();
 	hideSkinScreen();
 }
 
 //when WebSocket connection is closed
-function onClose() {
+export function onClose() {
 	if (!!ws && ws.readyState == WebSocket.OPEN) {
 		ws.close();
 	}
@@ -1510,7 +1394,7 @@ function onClose() {
 //if trying to establish a connection but failed
 //returns true if it actually couldn't connect,
 //false if it will try again
-function couldntConnect() {
+export function couldntConnect() {
 	setNotification("Couldn't connect to the server :/");
 	var err = new Error("couldntConnectError");
 	console.log(err.stack);
@@ -1519,9 +1403,9 @@ function couldntConnect() {
 }
 
 //called by form, connects with transition and error handling
-var isConnectingWithTransition = false;
-function connectWithTransition(dontDoAds) {
-	if (!isConnectingWithTransition && !isWaitingForAd) {
+export var isConnectingWithTransition = false;
+export function connectWithTransition(dontDoAds) {
+	if (!isConnectingWithTransition) {
 		isConnectingWithTransition = true;
 		if (doConnect(dontDoAds)) {
 			doTransition("", false, function () {
@@ -1544,21 +1428,10 @@ function connectWithTransition(dontDoAds) {
 
 //starts websocket connection
 //return true if it should start the transition on submit
-var isConnecting = false;
-function doConnect(dontDoAds) {
+export var isConnecting = false;
+export function doConnect(dontDoAds) {
+	dontDoAds = true;
 	if (!ws && !isConnecting && !isTransitioning) {
-		if (canRunAds && !dontDoAds && testPatreonAdsAllowed()) {
-			var adCounter = getAdCounter();
-			var lastAdTime = localStorage.lastAdTime;
-			lastAdTime = parseInt(lastAdTime);
-			lastAdTime = Date.now() - lastAdTime;
-			if (adCounter == 1 || (!isNaN(lastAdTime) && lastAdTime > 300000)) {
-				displayAd();
-				return false;
-			} else {
-				countAd();
-			}
-		}
 		isConnecting = true;
 		showCouldntConnectAfterTransition = false;
 		closedBecauseOfDeath = false;
@@ -1596,7 +1469,7 @@ function doConnect(dontDoAds) {
 }
 
 //when receiving a message from the websocket
-function onMessage(evt) {
+export function onMessage(evt) {
 	// console.log(evt);
 	var x, y, type, id, player, w, h, block, i, j, nameBytes;
 	var data = new Uint8Array(evt.data);
@@ -1958,8 +1831,6 @@ function onMessage(evt) {
 		}
 		closedBecauseOfDeath = true;
 		allowSkipDeathTransition = true;
-		hideBanners();
-		refreshBanner();
 		//show newsbox
 		document.getElementById("newsbox").style.display = null;
 		deathTransitionTimeout = window.setTimeout(function () {
@@ -1974,7 +1845,6 @@ function onMessage(evt) {
 				doTransition("GAME OVER", true, null, function () {
 					onClose();
 					resetAll();
-					initVideoAdsScript();
 				}, true);
 				// console.log("after doTransition",isTransitioning);
 			}
@@ -2061,7 +1931,7 @@ function onMessage(evt) {
 }
 
 //send a message to the websocket, returns true if successful
-function wsSendMsg(action, data) {
+export function wsSendMsg(action, data) {
 	var utf8Array;
 	if (!!ws && ws.readyState == WebSocket.OPEN) {
 		var array = [action];
@@ -2115,7 +1985,7 @@ function wsSendMsg(action, data) {
 }
 
 //basically like refreshing the page
-function resetAll() {
+export function resetAll() {
 	if (!!ws && ws.readyState == WebSocket.OPEN) {
 		ws.close();
 	}
@@ -2159,7 +2029,7 @@ function resetAll() {
 }
 
 //initiate tutorialBlocks and tutorialPlayers
-function initTutorial() {
+export function initTutorial() {
 	tutorialBlocks = [];
 	for (var x = 0; x < 10; x++) {
 		for (var y = 0; y < 10; y++) {
@@ -2182,7 +2052,7 @@ function initTutorial() {
 }
 
 //initiate skinScreenBlocks and buttons
-function initSkinScreen() {
+export function initSkinScreen() {
 	skinButtonCanvas = document.getElementById("skinButton");
 	skinButtonShadow = document.getElementById("skinButtonShadow");
 	skinButtonCtx = skinButtonCanvas.getContext("2d");
@@ -2246,7 +2116,7 @@ function initSkinScreen() {
 }
 
 //initiate title players
-function initTitle() {
+export function initTitle() {
 	for (var lineI = 0; lineI < titleLines.length; lineI++) {
 		var thisLine = titleLines[lineI];
 		for (var subLineI = 0; subLineI < thisLine.line.length; subLineI++) {
@@ -2261,7 +2131,7 @@ function initTitle() {
 	titCtx = titCanvas.getContext("2d");
 }
 
-function testHashForMobile() {
+export function testHashForMobile() {
 	if (deviceType != DeviceTypes.DESKTOP) {
 		var hash = location.hash;
 		if (hash != "" && hash != "#pledged") {
@@ -2274,7 +2144,7 @@ function testHashForMobile() {
 	}
 }
 
-function openSplixApp(data) {
+export function openSplixApp(data) {
 	var url = location.href = "splix://" + data;
 	if (deviceType == DeviceTypes.ANDROID && navigator.userAgent.toLowerCase().indexOf("chrome") > -1) {
 		window.document.body.innerHTML = "Chrome doesn't like auto redirecting, click <a href=\"" + url +
@@ -2282,200 +2152,19 @@ function openSplixApp(data) {
 	}
 }
 
-//request canrunads js
-var canRunAdsRequested = false;
-function requestCanRunAds() {
-	if (!canRunAdsRequested && testPatreonAdsAllowed()) {
-		fetch("https://api.adinplay.com/libs/aiptag/pub/JTE/splix.io/tag.min.js", { mode: "no-cors" }).then(
-			function () {
-				canRunAds = true;
-				canRunAdsRequested = true;
-			},
-			function () {
-				//failed, can't run ads
-				canRunAdsRequested = true;
-			},
-		);
-	}
-}
-
-var initVidAdsCalled = false;
-var adplayer;
-function initVideoAdsScript() {
-	requestCanRunAds();
-
-	if (!initVidAdsCalled && testPatreonAdsAllowed()) {
-		initVidAdsCalled = true;
-		aiptag.cmd.player.push(function () {
-			adplayer = new aipPlayer({
-				AD_WIDTH: 960,
-				AD_HEIGHT: 540,
-				AD_FULLSCREEN: false,
-				AD_CENTERPLAYER: false,
-				LOADING_TEXT: "loading advertisement",
-				PREROLL_ELEM: function () {
-					return prerollElem;
-				},
-				AIP_COMPLETE: function (AD_TYPE) {
-					console.log("Ad: " + AD_TYPE + " Completed");
-					onAdFinish();
-				},
-				AIP_REMOVE: function () {},
-			});
-		});
-	}
-}
-
-var prerollElem, isWaitingForAd = false, boltIsRendered = false;
-function displayAd() {
-	isWaitingForAd = true;
-	formElem.style.display = "none";
-	prerollElem.style.display = null;
-
-	aiptag.cmd.player.push(function () {
-		adplayer.startPreRoll();
-	});
-	onAdLoaded();
-
-	scrollAd();
-}
-
-var prerollIsVisible = false;
-function onAdLoaded(evt) {
-	lsSet("refreshDuringAd", "true");
-	prerollIsVisible = true;
-	hideBanners();
-}
-
-function scrollAd() {
-	var top = prerollElem.offsetTop;
-	var bottom = top + prerollElem.offsetHeight;
-	var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-	var scrollBottom = scrollTop + window.innerHeight;
-	var middle = (top + bottom) / 2;
-	if (top < scrollTop || bottom > scrollBottom) {
-		window.scroll(0, middle - window.innerHeight / 2);
-	}
-}
-
-function onAdFinish() {
-	countAd();
-	lsSet("refreshDuringAd", "");
-	prerollIsVisible = false;
-	lsSet("lastAdTime", Date.now());
-	formElem.style.display = null;
-	prerollElem.style.display = "none";
-	isConnectingWithTransition = false;
-	isWaitingForAd = false;
-	connectWithTransition(true);
-}
-
-function getAdCounter() {
-	var adCounter = localStorage.adCounter;
-	if (adCounter === undefined) {
-		adCounter = 0;
-	}
-	adCounter = parseInt(adCounter);
-	if (isNaN(adCounter)) {
-		adCounter = 0;
-	}
-	return adCounter;
-}
-
-function countAd() {
-	var adCounter = getAdCounter();
-	adCounter++;
-	if (adCounter > 5) {
-		adCounter = 0;
-	}
-	lsSet("adCounter", adCounter);
-}
-/* jshint ignore:end */
-
-function refreshBanner() {
-	if (testPatreonAdsAllowed()) {
-		aiptag.cmd.display.push(function () {
-			aipDisplayTag.display("JTE_splix-io_300x250");
-		});
-	}
-}
-
-function showBanner() {
-	if (!prerollIsVisible) {
-		adBox.style.visibility = null;
-	}
-}
-
-function showBanner2() {
-	if (!prerollIsVisible) {
-		adBox2.style.visibility = null;
-	}
-}
-
-function hideBanners() {
-	adBox.style.visibility = adBox2.style.visibility = "hidden";
-}
-
-function setAdBoxLeft() {
-	adBox.style.left = "-" + (adBox.clientWidth + 20) + "px";
-}
-
-function setUpAdBoxContent() {
-	adBoxContentDiv = document.createElement("div");
-	adBoxContentDiv2 = document.createElement("div");
-	adBoxContentDiv.id = "JTE_splix-io_300x250";
-	adBox.appendChild(adBoxContentDiv);
-	adBox2.appendChild(adBoxContentDiv2);
-}
-
-function onAdBoxLoaded() {
-	showBanner();
-	setAdBoxLeft();
-}
-
-function onAdBox2Loaded() {
-	showBanner2();
-}
-
-var adBoxContentDiv = null, prevAdboxContentWidth = 0, prevAdboxContentHeight = 0, adBox = null;
-function testAdBoxLoaded() {
-	if (!adBoxContentDiv) {
-		return;
-	}
-	if (
-		prevAdboxContentWidth != adBoxContentDiv.clientWidth || prevAdboxContentHeight != adBoxContentDiv.clientHeight
-	) {
-		prevAdboxContentWidth = adBoxContentDiv.clientWidth;
-		prevAdboxContentHeight = adBoxContentDiv.clientHeight;
-		onAdBoxLoaded();
-	}
-}
-var adBoxContentDiv2 = null, prevAdbox2ContentWidth = 0, prevAdbox2ContentHeight = 0, adBox2 = null;
-function testAdBox2Loaded() {
-	if (!adBoxContentDiv2) return;
-	if (
-		prevAdbox2ContentWidth != adBoxContentDiv2.clientWidth ||
-		prevAdbox2ContentHeight != adBoxContentDiv2.clientHeight
-	) {
-		prevAdbox2ContentWidth = adBoxContentDiv2.clientWidth;
-		prevAdbox2ContentHeight = adBoxContentDiv2.clientHeight;
-		onAdBox2Loaded();
-	}
-}
-
 //called when moving mouse/ clicking
-function showCursor() {
+export function showCursor() {
 	document.body.style.cursor = null;
 }
 
-function updateCmpPersistentLinkVisibility() {
+export function updateCmpPersistentLinkVisibility() {
 	const el = document.querySelector(".qc-cmp2-persistent-link");
 	if (el) {
 		el.style.display = beginScreenVisible ? "" : "none";
 	}
 }
 
-function popUp(url, w, h) {
+export function popUp(url, w, h) {
 	var left = (screen.width / 2) - (w / 2);
 	var top = (screen.height / 2) - (h / 2);
 	window.open(
@@ -2488,7 +2177,7 @@ function popUp(url, w, h) {
 
 //sets the right color for UI
 //by skinId
-function colorUI() {
+export function colorUI() {
 	var c = getColorForBlockSkinId(myColorId);
 	var mainColor = c.brighter;
 	var edgeColor = c.darker;
@@ -2499,7 +2188,7 @@ function colorUI() {
 }
 
 //styles an element with mainColor and edgeColor;
-function colorBox(elem, mainColor, edgeColor) {
+export function colorBox(elem, mainColor, edgeColor) {
 	elem.style.backgroundColor = mainColor;
 	elem.style.boxShadow = "1px 1px " + edgeColor + "," +
 		"2px 2px " + edgeColor + "," +
@@ -2512,7 +2201,7 @@ function colorBox(elem, mainColor, edgeColor) {
 //called when a skinbutton is pressed
 //add = -1 or 1 (increment/decrement)
 //type = 0 (color) or 1 (pattern)
-function skinButton(add, type) {
+export function skinButton(add, type) {
 	if (type === 0) {
 		var oldC = localStorage.getItem("skinColor");
 		var hiddenCs = [];
@@ -2560,7 +2249,7 @@ function skinButton(add, type) {
 	updateSkin();
 }
 
-function updateSkin() {
+export function updateSkin() {
 	var blockId = parseInt(localStorage.skinColor) + 1;
 	fillArea(
 		0,
@@ -2575,14 +2264,14 @@ function updateSkin() {
 }
 
 //lives stuff
-var lives = [];
-var lifeBox;
-function clearAllLives() {
+export var lives = [];
+export var lifeBox;
+export function clearAllLives() {
 	lifeBox.innerHTML = "";
 	lives = [];
 }
 
-function setLives(current, total) {
+export function setLives(current, total) {
 	var life, i;
 	var oldLength = lives.length;
 	for (i = 0; i < total - oldLength; i++) {
@@ -2740,7 +2429,7 @@ function setLives(current, total) {
 	}
 }
 
-function renderAllLives(dt) {
+export function renderAllLives(dt) {
 	for (var i = 0; i < lives.length; i++) {
 		var life = lives[i];
 		life.render(dt);
@@ -2748,23 +2437,23 @@ function renderAllLives(dt) {
 }
 
 //engagement meter
-var engagementIsPlaying = localStorage.engagementIsPlaying == "true";
-var engagementLastPlayTime = localStorage.engagementLastPlayTime;
+export var engagementIsPlaying = localStorage.engagementIsPlaying == "true";
+export var engagementLastPlayTime = localStorage.engagementLastPlayTime;
 if (engagementLastPlayTime === undefined) {
 	engagementLastPlayTime = Date.now();
 }
-var engagementLastNoPlayTime = 0;
-var engagementLastChangeTime = localStorage.engagementLastChangeTime;
+export var engagementLastNoPlayTime = 0;
+export var engagementLastChangeTime = localStorage.engagementLastChangeTime;
 if (engagementLastChangeTime === undefined) {
 	engagementLastChangeTime = Date.now();
 }
-var engagementValue = localStorage.engagementValue;
+export var engagementValue = localStorage.engagementValue;
 if (engagementValue === undefined) {
 	engagementValue = 0.5;
 } else {
 	engagementValue = parseFloat(engagementValue);
 }
-function engagementSetIsPlaying(set) {
+export function engagementSetIsPlaying(set) {
 	var now = Date.now();
 	if (set != engagementIsPlaying) {
 		lsSet("engagementIsPlaying", set);
@@ -2798,7 +2487,7 @@ function engagementSetIsPlaying(set) {
 
 //patreon stuff
 /* jshint ignore:start */
-function loginWithPatreon() {
+export function loginWithPatreon() {
 	lsSet("clickedLoginWithPatreonButton", "true");
 	var redirectUri = getPatreonRedirectUri();
 	window.location =
@@ -2807,11 +2496,11 @@ function loginWithPatreon() {
 }
 /* jshint ignore:end */
 
-function getPatreonRedirectUri() {
+export function getPatreonRedirectUri() {
 	return location.origin + location.pathname;
 }
 
-function setPatreonOverlay(visible, content) {
+export function setPatreonOverlay(visible, content) {
 	var el = document.getElementById("patreonOverlay");
 	el.style.display = visible ? null : "none";
 	if (content !== undefined) {
@@ -2819,7 +2508,7 @@ function setPatreonOverlay(visible, content) {
 	}
 }
 
-function requestPatreonPledgeData(showMessageWhenDone) {
+export function requestPatreonPledgeData(showMessageWhenDone) {
 	if (localStorage.patreonDeviceId === undefined || localStorage.patreonDeviceId == "") {
 		resetPatreonPledgedData();
 	} else {
@@ -2845,25 +2534,14 @@ function requestPatreonPledgeData(showMessageWhenDone) {
 	}
 }
 
-function resetPatreonPledgedData() {
+export function resetPatreonPledgedData() {
 	lsSet("patreonLastPledgedValue", 0);
 	lsSet("patreonLastSplixCode", "");
 }
 
-function testPatreonAdsAllowed() {
-	if (localStorage.fuckAds == "true") {
-		return false;
-	}
-	if (localStorage.patreonLastPledgedValue > 0) {
-		return false;
-	} else {
-		return true;
-	}
-}
-
 //checks href query for patreon data
 //returns true if a patreon code was found
-function checkPatreonQuery() {
+export function checkPatreonQuery() {
 	//if referred after patreon api login
 	var query = parseQuery(location.href);
 	var found = false;
@@ -2893,7 +2571,7 @@ function checkPatreonQuery() {
 
 //remove blocks that are too far away from the camera and are likely
 //to be seen without an updated state
-function removeBlocksOutsideViewport(pos) {
+export function removeBlocksOutsideViewport(pos) {
 	for (i = blocks.length - 1; i >= 0; i--) {
 		var block = blocks[i];
 		if (
@@ -2908,7 +2586,7 @@ function removeBlocksOutsideViewport(pos) {
 }
 
 //gets color object for a player skin id
-function getColorForBlockSkinId(id) {
+export function getColorForBlockSkinId(id) {
 	switch (id) {
 		case 0:
 			return colors.red;
@@ -2946,7 +2624,7 @@ function getColorForBlockSkinId(id) {
 }
 
 //sets the with/height of a full screen canvas, takes retina displays into account
-function ctxCanvasSize(ctx, dontUseQuality) {
+export function ctxCanvasSize(ctx, dontUseQuality) {
 	var w = window.innerWidth, h = window.innerHeight;
 	if (canvasTransformType == canvasTransformTypes.TUTORIAL) {
 		w = h = 300;
@@ -2977,7 +2655,7 @@ function ctxCanvasSize(ctx, dontUseQuality) {
 //apply camera transformations on a canvas
 //canvasTransformType is a global that determines what
 //transformation should be used
-var canvasTransformTypes = {
+export var canvasTransformTypes = {
 	MAIN: 1,
 	TUTORIAL: 2,
 	SKIN: 3,
@@ -2985,8 +2663,8 @@ var canvasTransformTypes = {
 	TITLE: 5,
 	LIFE: 6,
 };
-var canvasTransformType = canvasTransformTypes.MAIN;
-function ctxApplyCamTransform(ctx, setSize, dontUseQuality) {
+export var canvasTransformType = canvasTransformTypes.MAIN;
+export function ctxApplyCamTransform(ctx, setSize, dontUseQuality) {
 	if (setSize) {
 		ctxCanvasSize(ctx, dontUseQuality);
 	}
@@ -3021,7 +2699,7 @@ function ctxApplyCamTransform(ctx, setSize, dontUseQuality) {
 }
 
 //shakes the camera
-function doCamShake(x, y, doRotate) {
+export function doCamShake(x, y, doRotate) {
 	if (doRotate === undefined) {
 		doRotate = true;
 	}
@@ -3029,7 +2707,7 @@ function doCamShake(x, y, doRotate) {
 }
 
 //shakes the camera but uses a dir (ranges from 0-3) as input
-function doCamShakeDir(dir, amount, doRotate) {
+export function doCamShakeDir(dir, amount, doRotate) {
 	if (amount === undefined) {
 		amount = 6;
 	}
@@ -3051,8 +2729,10 @@ function doCamShakeDir(dir, amount, doRotate) {
 	doCamShake(x, y, doRotate);
 }
 
+window.doCamShakeDir = doCamShakeDir;
+
 //applyes camShakeForces
-function calcCamOffset() {
+export function calcCamOffset() {
 	camPosOffset = [0, 0];
 	camRotOffset = 0;
 	for (var i = camShakeForces.length - 1; i >= 0; i--) {
@@ -3087,28 +2767,28 @@ function calcCamOffset() {
 	camPosOffset[1] *= limit;
 }
 
-function lerp(a, b, t) {
+export function lerp(a, b, t) {
 	return a + t * (b - a);
 }
 
 //inverse lerp
-function iLerp(a, b, t) {
+export function iLerp(a, b, t) {
 	return (t - a) / (b - a);
 }
 
 //fixed lerp, calls lerp() multiple times when having a lower framerate
-function lerpt(a, b, t) {
+export function lerpt(a, b, t) {
 	return lerptt(a, b, t, deltaTime / 16.6666);
 }
 
 //lerps between a and b over t, where tt is the amount of times that lerp should becalled
-function lerptt(a, b, t, tt) {
+export function lerptt(a, b, t, tt) {
 	var newT = 1 - Math.pow(1 - t, tt);
 	return lerp(a, b, newT);
 }
 
 //lerps an array
-function lerpA(a, b, t) {
+export function lerpA(a, b, t) {
 	var newArray = [];
 	for (var i = 0; i < a.length; i++) {
 		newArray.push(lerp(a[i], b[i], t));
@@ -3117,27 +2797,27 @@ function lerpA(a, b, t) {
 }
 
 //fixed modulo
-function mod(n, m) {
+export function mod(n, m) {
 	return ((n % m) + m) % m;
 }
 
 //clamp
-function clamp(v, min, max) {
+export function clamp(v, min, max) {
 	return Math.max(min, Math.min(max, v));
 }
 
-function clamp01(v) {
+export function clamp01(v) {
 	return clamp(v, 0, 1);
 }
 
 //returns random item from array
-function randFromArray(array) {
+export function randFromArray(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
 
 //limits a value between -1 and 1 without clamping,
 //v will gradually move towards 1/-1 but will never actually reach it
-function smoothLimit(v) {
+export function smoothLimit(v) {
 	var negative = v < 0;
 	if (negative) {
 		v *= -1;
@@ -3150,7 +2830,7 @@ function smoothLimit(v) {
 }
 
 //updates the stats in the bottom left corner
-function updateStats() {
+export function updateStats() {
 	if (myRank > totalPlayers && myRankSent) {
 		totalPlayers = myRank;
 	} else if ((totalPlayers < myRank) || (myRank === 0 && totalPlayers > 0)) {
@@ -3162,7 +2842,7 @@ function updateStats() {
 
 //draws a trail on a canvas, can be drawn on multiple canvases
 //when drawCalls contains more than one object
-function drawTrailOnCtx(drawCalls, trail, lastPos) {
+export function drawTrailOnCtx(drawCalls, trail, lastPos) {
 	if (trail.length > 0) {
 		for (var ctxI = 0; ctxI < drawCalls.length; ctxI++) {
 			var thisDrawCall = drawCalls[ctxI];
@@ -3187,7 +2867,7 @@ function drawTrailOnCtx(drawCalls, trail, lastPos) {
 }
 
 //draws diagonal lines on a canvas, can be used as mask and stuff like that
-function drawDiagonalLines(ctx, color, thickness, spaceBetween, offset) {
+export function drawDiagonalLines(ctx, color, thickness, spaceBetween, offset) {
 	if (thickness > 0) {
 		ctx.lineCap = "butt";
 		ctx.strokeStyle = color;
@@ -3210,7 +2890,7 @@ function drawDiagonalLines(ctx, color, thickness, spaceBetween, offset) {
 	}
 }
 
-function drawAnimatedText(ctx, text, time, x, y, fontHeight, color, font, textExtrude, charSpeed, orderSeed) {
+export function drawAnimatedText(ctx, text, time, x, y, fontHeight, color, font, textExtrude, charSpeed, orderSeed) {
 	var t2;
 	if (color === undefined) {
 		color = "white";
@@ -3273,7 +2953,7 @@ function drawAnimatedText(ctx, text, time, x, y, fontHeight, color, font, textEx
 }
 
 //orders two positions so that pos1 is in the top left and pos2 in the bottom right
-function orderTwoPos(pos1, pos2) {
+export function orderTwoPos(pos1, pos2) {
 	var x1 = Math.min(pos1[0], pos2[0]);
 	var y1 = Math.min(pos1[1], pos2[1]);
 	var x2 = Math.max(pos1[0], pos2[0]);
@@ -3282,7 +2962,7 @@ function orderTwoPos(pos1, pos2) {
 }
 
 //fills an area, if array is not specified it defaults to blocks[]
-function fillArea(x, y, w, h, type, pattern, array, isEdgeChunk = false) {
+export function fillArea(x, y, w, h, type, pattern, array, isEdgeChunk = false) {
 	var defaultArray = array === undefined;
 	if (defaultArray) {
 		array = blocks;
@@ -3311,7 +2991,7 @@ function fillArea(x, y, w, h, type, pattern, array, isEdgeChunk = false) {
 }
 
 //changes blockId in to a blockId with a pattern applied
-function applyPattern(blockId, pattern, x, y) {
+export function applyPattern(blockId, pattern, x, y) {
 	var modX, modY;
 	if (blockId < 2) {
 		return blockId;
@@ -3672,8 +3352,8 @@ function applyPattern(blockId, pattern, x, y) {
 }
 
 //top notification stuffs
-var currentTopNotifications = [];
-function doTopNotification(text) {
+export var currentTopNotifications = [];
+export function doTopNotification(text) {
 	var thisTopNotification = {
 		text: text,
 		elem: null,
@@ -3724,14 +3404,14 @@ function doTopNotification(text) {
 }
 
 //touch stuffs
-function bindSwipeEvents() {
+export function bindSwipeEvents() {
 	touchControlsElem.addEventListener("touchstart", onTouchStart);
 	touchControlsElem.addEventListener("touchmove", onTouchMove);
 	touchControlsElem.addEventListener("touchend", onTouchEnd);
 	touchControlsElem.addEventListener("touchcancel", onTouchEnd);
 }
 
-function onTouchStart(e) {
+export function onTouchStart(e) {
 	var touch = e.touches[e.touches.length - 1];
 	currentTouches.push({
 		prevPos: [touch.pageX, touch.pageY],
@@ -3740,7 +3420,7 @@ function onTouchStart(e) {
 	});
 }
 
-function onTouchMove(e) {
+export function onTouchMove(e) {
 	var touches = e.touches;
 	for (var i = 0; i < touches.length; i++) {
 		var touch = touches[i];
@@ -3758,7 +3438,7 @@ function onTouchMove(e) {
 	e.preventDefault();
 }
 
-function calcTouch(customTouch, touch) {
+export function calcTouch(customTouch, touch) {
 	var currentTime = Date.now();
 	var deltaTime = currentTime - customTouch.prevTime;
 	var curPos = [touch.pageX, touch.pageY];
@@ -3787,7 +3467,7 @@ function calcTouch(customTouch, touch) {
 	}
 }
 
-function onTouchEnd(e) {
+export function onTouchEnd(e) {
 	for (var i = currentTouches.length - 1; i >= 0; i--) {
 		for (var j = 0; j < e.touches.length; j++) {
 			if (currentTouches[i].id == e.touches[j].identifier) {
@@ -3802,7 +3482,7 @@ function onTouchEnd(e) {
 //reverseOnHalf: start playing backwords once it is showing the title
 //callback1: callback fired once the transition is full screen for the first time
 //callback2: fired when full screen for the second time, only shown when reverseOnHalf = true
-function doTransition(text, reverseOnHalf, callback1, callback2, overrideExisting) {
+export function doTransition(text, reverseOnHalf, callback1, callback2, overrideExisting) {
 	// console.log("doTransition()", text, reverseOnHalf, callback1, callback2, overrideExisting);
 	// console.log("isTransitioning:",isTransitioning);
 	if (!isTransitioning || overrideExisting) {
@@ -3820,16 +3500,13 @@ function doTransition(text, reverseOnHalf, callback1, callback2, overrideExistin
 	}
 }
 
-function doSkipDeathTransition() {
+export function doSkipDeathTransition() {
 	if (allowSkipDeathTransition) {
 		if (deathTransitionTimeout !== null) {
 			window.clearTimeout(deathTransitionTimeout);
 			deathTransitionTimeout = null;
 			onClose();
 			doTransition("", false, function () {
-				window.setTimeout(() => {
-					initVideoAdsScript();
-				}, 700);
 				resetAll();
 			});
 		}
@@ -3838,13 +3515,13 @@ function doSkipDeathTransition() {
 }
 
 //random number between 0 and 1 using a seed
-function rndSeed(seed) {
+export function rndSeed(seed) {
 	var x = Math.sin(seed) * 10000;
 	return x - Math.floor(x);
 }
 
 //easing functions
-var ease = {
+export var ease = {
 	// in: function(t){
 	// 	return t === 0 ? 0 : Math.pow( 2, 10 * t - 10 );
 	// },
@@ -3868,7 +3545,7 @@ var ease = {
 };
 
 //draws main title
-function drawTitle(ctx, time, isShadow, maxExtrude, extraShadow) {
+export function drawTitle(ctx, time, isShadow, maxExtrude, extraShadow) {
 	ctx.strokeStyle = (!!isShadow) ? colors.red.patternEdge : colors.red.brighter;
 	ctx.lineWidth = 16;
 	ctx.lineJoin = "round";
@@ -3947,7 +3624,7 @@ function drawTitle(ctx, time, isShadow, maxExtrude, extraShadow) {
 }
 
 //draws blocks on ctx
-function drawBlocks(ctx, blocks, checkViewport) {
+export function drawBlocks(ctx, blocks, checkViewport) {
 	var t2;
 	for (var i = 0; i < blocks.length; i++) {
 		var block = blocks[i];
@@ -4105,7 +3782,7 @@ function drawBlocks(ctx, blocks, checkViewport) {
 }
 
 //draws a player on ctx
-function drawPlayer(ctx, player, timeStamp) {
+export function drawPlayer(ctx, player, timeStamp) {
 	if (player.hasReceivedPosition) {
 		var x, y;
 
@@ -4435,7 +4112,7 @@ function drawPlayer(ctx, player, timeStamp) {
 }
 
 //moves (lerp) drawPos to the actual player position
-function moveDrawPosToPos(player) {
+export function moveDrawPosToPos(player) {
 	// var xDist = Math.abs(player.pos[0] - player.drawPos[0]);
 	// var yDist = Math.abs(player.pos[1] - player.drawPos[1]);
 	var target = null;
@@ -4449,7 +4126,7 @@ function moveDrawPosToPos(player) {
 }
 
 //move pos along dir with offset
-function movePos(pos, dir, offset) {
+export function movePos(pos, dir, offset) {
 	switch (dir) {
 		case 0:
 			pos[0] += offset;
@@ -4466,12 +4143,12 @@ function movePos(pos, dir, offset) {
 	}
 }
 
-var dtCaps = [0, 6.5, 16, 33, 49, 99];
-function getDtCap(index) {
+window.dtCaps = [0, 6.5, 16, 33, 49, 99];
+export function getDtCap(index) {
 	return dtCaps[clamp(index, 0, dtCaps.length - 1)];
 }
 
-function toggleQuality() {
+export function toggleQuality() {
 	switch (localStorage.quality) {
 		case "auto":
 			lsSet("quality", "0.4");
@@ -4489,8 +4166,8 @@ function toggleQuality() {
 	setQuality();
 }
 
-var qualityText;
-function setQuality() {
+window.qualityText = "";
+export function setQuality() {
 	if (localStorage.getItem("quality") === null) {
 		lsSet("quality", "1");
 	}
@@ -4506,14 +4183,14 @@ function setQuality() {
 	}
 }
 
-var uglyText;
-function setUglyText() {
+window.uglyText = null;
+export function setUglyText() {
 	updateUglyMode();
 	var onOff = uglyMode ? "on" : "off";
 	uglyText.innerHTML = "Ugly mode: " + onOff;
 }
 
-function toggleUglyMode() {
+export function toggleUglyMode() {
 	switch (localStorage.uglyMode) {
 		case "true":
 			lsSet("uglyMode", "false");
@@ -4526,15 +4203,15 @@ function toggleUglyMode() {
 	setUglyText();
 }
 
-function updateUglyMode() {
+export function updateUglyMode() {
 	uglyMode = localStorage.uglyMode == "true";
 }
 
-function setLeaderboardVisibility() {
+export function setLeaderboardVisibility() {
 	leaderboardDivElem.style.display = leaderboardHidden ? "none" : null;
 }
 
-function loop(timeStamp) {
+export function loop(timeStamp) {
 	var i, lastTrail, t, t2;
 	var realDeltaTime = timeStamp - prevTimeStamp;
 	if (realDeltaTime > lerpedDeltaTime) {
@@ -5222,8 +4899,6 @@ function loop(timeStamp) {
 			ctx.fillText(str, ctx.canvas.width - textWidth - 10, ctx.canvas.height - 10);
 		}
 
-		testAdBoxLoaded();
-		testAdBox2Loaded();
 
 		//ping overload test
 		// if(Date.now() - lastPingOverloadTestTime > 10000){
@@ -5278,8 +4953,8 @@ function loop(timeStamp) {
 	window.requestAnimationFrame(loop);
 }
 
-var gamePadIsHonking = false;
-var customMappings = [
+window.gamePadIsHonking = false;
+window.customMappings = [
 	{
 		name: "Generic USB Joystick", //https://twitter.com/Mat2095/status/765566729812598784
 		buttonMap: {
@@ -5352,8 +5027,8 @@ var customMappings = [
 	},
 ];
 
-var currentGamepad;
-var currentMap = {
+export var currentGamepad;
+export var currentMap = {
 	buttonMap: {
 		0: 0,
 		1: 1,
@@ -5374,7 +5049,7 @@ var currentMap = {
 	},
 	axesMap: { 0: 0, 1: 1, 2: 2, 3: 3 },
 };
-function getButton(id) {
+export function getButton(id) {
 	if (currentGamepad) {
 		if (currentGamepad.buttons) {
 			var button = currentGamepad.buttons[currentMap.buttonMap[id]];
@@ -5386,7 +5061,7 @@ function getButton(id) {
 	return false;
 }
 
-function getAxis(id) {
+export function getAxis(id) {
 	if (currentGamepad) {
 		if (currentGamepad.axes) {
 			var axis = currentGamepad.axes[currentMap.axesMap[id]];
@@ -5398,7 +5073,7 @@ function getAxis(id) {
 	return 0;
 }
 
-function parseGamepads() {
+export function parseGamepads() {
 	if ("getGamepads" in navigator) {
 		var gamepads = navigator.getGamepads();
 		var honkButtonPressedAnyPad = false;
@@ -5492,7 +5167,7 @@ function parseGamepads() {
 }
 
 //stackoverflow.com/a/18729931/3625298
-function toUTF8Array(str) {
+export function toUTF8Array(str) {
 	var utf8 = [];
 	for (var i = 0; i < str.length; i++) {
 		var charcode = str.charCodeAt(i);
@@ -5521,7 +5196,7 @@ function toUTF8Array(str) {
 }
 
 //http://stackoverflow.com/a/7124052/3625298
-function htmlEscape(str) {
+export function htmlEscape(str) {
 	return String(str)
 		.replace(/&/g, "&amp;")
 		.replace(/"/g, "&quot;")
@@ -5530,14 +5205,14 @@ function htmlEscape(str) {
 		.replace(/>/g, "&gt;");
 }
 
-var swearArr = [];
+export var swearArr = [];
 simpleRequest("./static/swearList.txt", function (result) {
 	swearArr = result.split("\n").filter(function (n) {
 		return n;
 	});
 });
-var swearRepl = "balaboo";
-function filter(str) {
+export var swearRepl = "balaboo";
+export function filter(str) {
 	str = str.replace(/[卐卍]/g, "❤");
 	var words = str.split(" ");
 	for (var i = 0; i < words.length; i++) {
@@ -5572,7 +5247,7 @@ function filter(str) {
  * This library is free.  You can redistribute it and/or modify it.
  */
 
-function Utf8ArrayToStr(array) {
+export function Utf8ArrayToStr(array) {
 	var out, i, len, c;
 	var char2, char3;
 
@@ -5615,7 +5290,7 @@ function Utf8ArrayToStr(array) {
 	return out;
 }
 
-function bytesToInt() {
+export function bytesToInt() {
 	var integer = 0;
 	var multiplier = 0;
 	for (var i = arguments.length - 1; i >= 0; i--) {
@@ -5626,7 +5301,7 @@ function bytesToInt() {
 	return integer;
 }
 
-function intToBytes(integer, byteCount) {
+export function intToBytes(integer, byteCount) {
 	var bytes = [];
 	for (var i = 0; i < byteCount; i++) {
 		var byte = integer & 0xff;
@@ -5636,7 +5311,7 @@ function intToBytes(integer, byteCount) {
 	return bytes;
 }
 
-function parseTimeToString(seconds) {
+export function parseTimeToString(seconds) {
 	var hours = Math.floor(seconds / 3600);
 	var minutes = Math.floor((seconds - (hours * 3600)) / 60);
 	seconds = seconds - (hours * 3600) - (minutes * 60);
@@ -5656,7 +5331,7 @@ function parseTimeToString(seconds) {
 	}
 }
 
-function parseQuery(url) {
+export function parseQuery(url) {
 	var startIndex = url.indexOf("?");
 	if (startIndex < 0) {
 		return {};
@@ -5672,3 +5347,6 @@ function parseQuery(url) {
 	}
 	return query;
 }
+
+window.sendAction = sendAction;
+window.wsSendMsg = wsSendMsg;
