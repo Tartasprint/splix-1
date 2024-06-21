@@ -3,9 +3,9 @@ import { getSelectedServer, initServerSelection } from "./network/serverSelectio
 
 export var GLOBAL_SPEED = 0.006;
 export var VIEWPORT_RADIUS = 30;
-export var MAX_ZOOM = 430;
+window.MAX_ZOOM = 1000;
 // export var MAX_ZOOM = 10000;
-export var BLOCKS_ON_SCREEN = 1100;
+window.BLOCKS_ON_SCREEN = 1100;
 // export var BLOCKS_ON_SCREEN = 20000;
 export var WAIT_FOR_DISCONNECTED_MS = 1000;
 export var USERNAME_SIZE = 6;
@@ -865,22 +865,22 @@ export function sendPatreonCode() {
 export function parseDirKey(c) {
 	var pd = false;
 	//up
-	if (c == 38 || c == 87 || c == 56 || c == 73) {
+	if (c == 38) {
 		sendDir(3);
 		pd = true;
 	}
 	//left
-	if (c == 37 || c == 65 || c == 52 || c == 74) {
+	if (c == 37) {
 		sendDir(2);
 		pd = true;
 	}
 	//right
-	if (c == 39 || c == 68 || c == 54 || c == 76) {
+	if (c == 39) {
 		sendDir(0);
 		pd = true;
 	}
 	//down
-	if (c == 40 || c == 83 || c == 50 || c == 75) {
+	if (c == 40) {
 		sendDir(1);
 		pd = true;
 	}
