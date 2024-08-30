@@ -39,8 +39,12 @@ export class PlayerBoundsTracker {
 	 */
 	#getBounds(playerId) {
 		const bounds = this.#bounds.get(playerId);
-		if (!bounds) throw new Error(`Assertion failed, no bounds found for player id '${playerId}'`);
-		return bounds;
+		if (!bounds) {
+			const e = new Error(`Assertion failed, no bounds found for player id '${playerId}'`);
+			console.trace(e);
+			throw e;	
+		}
+			return bounds;
 	}
 
 	/**

@@ -10,9 +10,11 @@ export function createArenaTiles(width, height) {
 	const tiles = [];
 	// Create the tiles of the arena
 	for (let x = 0; x < width; x++) {
-		const column = new Array(height).fill(0);
+		const column = new Array(height).fill(-1);
 		tiles.push(column);
 	}
+
+	tiles[2][2] = 0;
 
 	// Create the border of the arena
 	for (let x = 0; x < width; x++) {
@@ -50,15 +52,23 @@ export function clampRect(rect1, rect2) {
  * @param {Rect} rect
  * @param {number} value The value to fill the tiles with.
  */
-export function fillRect(tiles, tilesWidth, tilesHeight, rect, value) {
+export function fillRect(tiles, tilesWidth, tilesHeight, rect, value, preserve_walls = false) {
 	rect = clampRect(rect, {
 		min: new Vec2(),
 		max: new Vec2(tilesWidth, tilesHeight),
 	});
 
-	for (let x = rect.min.x; x < rect.max.x; x++) {
-		for (let y = rect.min.y; y < rect.max.y; y++) {
-			tiles[x][y] = value;
+	if(!preserve_walls){
+		for (let x = rect.min.x; x < rect.max.x; x++) {
+			for (let y = rect.min.y; y < rect.max.y; y++) {
+				tiles[x][y] = value;
+			}
+		}
+	} else {
+		for (let x = rect.min.x; x < rect.max.x; x++) {
+			for (let y = rect.min.y; y < rect.max.y; y++) {
+				if(tiles[x][y] != -1) tiles[x][y]= value;
+			}
 		}
 	}
 }

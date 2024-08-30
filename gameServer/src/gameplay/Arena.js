@@ -103,9 +103,10 @@ export class Arena {
 	 * Fills the spawn area tiles around a player.
 	 * @param {Vec2} pos
 	 * @param {number} playerId
+	 * @param {boolean} dead 
 	 */
-	fillPlayerSpawn(pos, playerId) {
-		this.#messenger.send.fillPlayerSpawn(pos.x, pos.y, playerId);
+	fillPlayerSpawn(pos, playerId, dead) {
+		this.#messenger.send.fillPlayerSpawn(pos.x, pos.y, playerId, dead);
 		const size = PLAYER_SPAWN_RADIUS * 2 + 1;
 		return size * size;
 	}

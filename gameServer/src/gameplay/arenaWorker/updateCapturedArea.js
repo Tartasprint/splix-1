@@ -57,7 +57,7 @@ export function updateCapturedArea(arenaTiles, playerId, bounds, unfillableLocat
 		if (alreadyFilled) return false;
 
 		const arenaValue = arenaTiles[coord.x][coord.y];
-		return arenaValue != playerId;
+		return arenaValue != playerId || arenaValue < 0;
 	}
 
 	// We could seed the flood fill along anywhere across the edge of the bounds really,
@@ -88,6 +88,8 @@ export function updateCapturedArea(arenaTiles, playerId, bounds, unfillableLocat
 		// They could lie outside the bounds for instance, or maybe this player is currently inside the
 		// captured area of the other player.
 	}
+
+	nodes.push(new Vec2(2,2));
 
 	while (true) {
 		const node = nodes.pop();

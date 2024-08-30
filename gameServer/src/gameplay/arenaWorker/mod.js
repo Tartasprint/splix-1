@@ -35,15 +35,17 @@ const arenaWorkerHandlers = {
 	 * @param {number} x
 	 * @param {number} y
 	 * @param {number} playerId
+	 * @param {boolean} dead 
 	 */
-	fillPlayerSpawn(x, y, playerId) {
+	fillPlayerSpawn(x, y, playerId, dead) {
 		const center = new Vec2(x, y);
 		const rect = {
 			min: center.clone().subScalar(PLAYER_SPAWN_RADIUS),
 			max: center.clone().addScalar(PLAYER_SPAWN_RADIUS + 1),
 		};
-		fillTilesRect(rect, playerId);
 		boundsTracker.initializePlayer(playerId, rect);
+		if (dead) { return };
+		fillTilesRect(rect, playerId);
 	},
 	/**
 	 * Fills the tiles that are covered with a player trail.
@@ -136,7 +138,7 @@ messenger.initializeWorkerContext(arenaWorkerHandlers);
  * @param {number} playerId
  */
 function fillTilesRect(rect, playerId) {
-	fillRect(arenaTiles, arenaWidth, arenaHeight, rect, playerId);
+	fillRect(arenaTiles, arenaWidth, arenaHeight, rect, playerId, true);
 	messenger.send.notifyAreasFilled([{
 		rect: {
 			minX: rect.min.x,

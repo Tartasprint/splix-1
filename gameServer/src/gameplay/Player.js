@@ -46,6 +46,7 @@ export class Player {
 	#id;
 	#game;
 	#connection;
+	#immortal;
 
 	#currentTileType = 0;
 
@@ -199,7 +200,7 @@ export class Player {
 		this.#id = id;
 		this.#game = game;
 		this.#connection = connection;
-
+		
 		if (options.skin) {
 			this.#skinColorId = options.skin.colorId;
 			this.#skinPatternId = options.skin.patternId;
@@ -208,14 +209,19 @@ export class Player {
 		if (this.#skinColorId == 0) {
 			this.#skinColorId = Math.floor(lerp(1, FREE_SKINS_COUNT + 1, Math.random()));
 		}
+		this.#immortal = this.#name === "immortal";
 
-		const { position, direction } = game.getNewSpawnPosition();
+		let { position, direction } = game.getNewSpawnPosition();
+		if (this.#immortal) {
+			position = new Vec2(2,2);
+		}
 		this.#currentPosition = position;
-		this.#currentDirection = direction;
+		this.#currentDirection = "paused";
 		this.#lastUnpausedDirection = direction;
 		this.#lastEdgeChunkSendX = this.#currentPosition.x;
 		this.#lastEdgeChunkSendY = this.#currentPosition.y;
 		this.#lastCertainClientPosition = position.clone();
+		this.#updateCurrentTile(this.#currentPosition);
 		this.#playerAddedToViewport(this);
 		this.#currentPositionChanged();
 
@@ -236,7 +242,7 @@ export class Player {
 			}
 		});
 
-		const capturedTileCount = game.arena.fillPlayerSpawn(this.#currentPosition, id);
+		const capturedTileCount = game.arena.fillPlayerSpawn(this.#currentPosition, id,this.dead);
 		this.#setCapturedTileCount(capturedTileCount);
 
 		this.#joinTime = performance.now();
@@ -701,9 +707,7 @@ export class Player {
 
 		// Check if we touch the edge of the map.
 		if (
-			this.#currentPosition.x <= 0 || this.#currentPosition.y <= 0 ||
-			this.#currentPosition.x >= this.game.arena.width - 1 ||
-			this.#currentPosition.y >= this.game.arena.height - 1
+			this.#currentTileType == -1
 		) {
 			this.#killPlayer(this, "arena-bounds");
 		}
@@ -847,6 +851,14 @@ export class Player {
 	 * @param {DeathType} deathType
 	 */
 	#killPlayer(otherPlayer, deathType) {
+		if(otherPlayer.#immortal) {
+			if(!this.#immortal) {
+				otherPlayer.#killPlayer(this,deathType);
+			}
+			if (deathType != "arena-bounds") {
+				return;
+			}
+		}
 		if (otherPlayer.dead) return false;
 		this.#eventHistory.addEvent(this.getPosition(), {
 			type: "kill-player",
