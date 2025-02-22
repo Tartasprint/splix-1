@@ -31,7 +31,6 @@ const arenaWorkerHandlers = {
 		arenaHeight = height;
 		arenaTiles = createArenaTiles(width, height, walls);
 		initializeMask(width, height);
-		blink_block(fillTilesRect,10,10,0,-1,2000);
 	},
 	/**
 	 * Fills the spawn area tiles around a player.

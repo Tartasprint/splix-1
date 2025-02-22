@@ -41,6 +41,9 @@ export class Game {
 	/** @type {ArrayBuffer?} */
 	#lastLeaderboardMessage = null;
 
+	/**@type {{p:Vec2, occupied: boolean}[]?}*/
+	#spawns;
+
 	get lastLeaderboardMessage() {
 		return this.#lastLeaderboardMessage;
 	}
@@ -51,15 +54,18 @@ export class Game {
 	 * @param {number} [options.arenaWidth]
 	 * @param {number} [options.arenaHeight]
 	 * @param {boolean[][]} [options.walls]
+	 * @param {Vec2[]?} [options.spawns]
 	 * @param {GameModes} [options.gameMode]
 	 */
 	constructor(applicationLoop, {
 		arenaWidth = 600,
 		arenaHeight = 600,
 		walls = [],
+		spawns = null,
 		gameMode = "default",
 	} = {}) {
 		this.#gameMode = gameMode;
+		this.#spawns = spawns;
 		this.#arena = new Arena(arenaWidth, arenaHeight, walls, this);
 		this.#arena.onRectFilled((rect, tileValue) => {
 			for (const player of this.getOverlappingViewportPlayersForRect(rect)) {
@@ -135,17 +141,22 @@ export class Game {
 	}
 
 	playerFinishSpawn(id){
-		this.#players.get(id).finishSpawn();
+		this.#players.get(id)?.finishSpawn();
 	}
 
 	/**
 	 * @returns {{position: Vec2, direction: import("./Player.js").UnpausedDirection}}
 	 */
 	getNewSpawnPosition() {
-		const position = true ? new Vec2(4,3) : new Vec2(
-			Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.width - PLAYER_SPAWN_RADIUS - 1, Math.random())),
-			Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.height - PLAYER_SPAWN_RADIUS - 1, Math.random())),
-		);
+		let position;
+		if(this.#spawns){
+			position = this.#spawns[Math.floor(Math.random()*this.#spawns.length)].p;
+		} else {
+			position = new Vec2(
+				Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.width - PLAYER_SPAWN_RADIUS - 1, Math.random())),
+				Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.height - PLAYER_SPAWN_RADIUS - 1, Math.random())),
+			);
+		}
 		/** @type {{direction: import("./Player.js").UnpausedDirection, distance: number}[]} */
 		const wallDistances = [
 			{
