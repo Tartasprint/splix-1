@@ -60,7 +60,7 @@ export class Game {
 		gameMode = "default",
 	} = {}) {
 		this.#gameMode = gameMode;
-		this.#arena = new Arena(arenaWidth, arenaHeight, walls);
+		this.#arena = new Arena(arenaWidth, arenaHeight, walls, this);
 		this.#arena.onRectFilled((rect, tileValue) => {
 			for (const player of this.getOverlappingViewportPlayersForRect(rect)) {
 				const { colorId, patternId } = this.getTileTypeForMessage(player, tileValue);
@@ -134,11 +134,15 @@ export class Game {
 		return player;
 	}
 
+	playerFinishSpawn(id){
+		this.#players.get(id).finishSpawn();
+	}
+
 	/**
 	 * @returns {{position: Vec2, direction: import("./Player.js").UnpausedDirection}}
 	 */
 	getNewSpawnPosition() {
-		const position = true ? new Vec2(4,4) : new Vec2(
+		const position = true ? new Vec2(4,3) : new Vec2(
 			Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.width - PLAYER_SPAWN_RADIUS - 1, Math.random())),
 			Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.height - PLAYER_SPAWN_RADIUS - 1, Math.random())),
 		);

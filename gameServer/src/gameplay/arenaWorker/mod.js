@@ -5,6 +5,7 @@ import { fillRect, clampRect } from "../../util/util.js";
 import { initializeMask, updateCapturedArea } from "./updateCapturedArea.js";
 import { PlayerBoundsTracker } from "./PlayerBoundsTracker.js";
 import { getMinimapPart } from "./getMinimapPart.js";
+import { blink_block, filling_spawn, running } from "./animations.js";
 
 /**
  * Stores which tiles have been filled and by which player.
@@ -30,6 +31,7 @@ const arenaWorkerHandlers = {
 		arenaHeight = height;
 		arenaTiles = createArenaTiles(width, height, walls);
 		initializeMask(width, height);
+		blink_block(fillTilesRect,10,10,0,-1,2000);
 	},
 	/**
 	 * Fills the spawn area tiles around a player.
@@ -64,8 +66,20 @@ const arenaWorkerHandlers = {
 		}));
 		messenger.send.notifyAreasFilled(tiles);
 		boundsTracker.initializePlayer(playerId, rect);
-		return count;
+		const anim_id = filling_spawn(fillTilesRect,messenger,x,y+1,playerId,5_000,2000,2_000);
+		return {count,anim_id};
 	},
+
+	/**
+	 * Stop an animation.
+	 * @param {number} id the id of the animation to stop
+	 */
+	stopAnimation(id){
+		console.log("Stopping", id);
+		running.get(id)?.stop(messenger);
+		running.delete(id);
+	},
+
 	/**
 	 * Fills the tiles that are covered with a player trail.
 	 * @param {[x: number, y: number][]} vertices
@@ -156,7 +170,7 @@ messenger.initializeWorkerContext(arenaWorkerHandlers);
  * @param {import("../../util/util.js").Rect} rect
  * @param {number} playerId
  */
-function fillTilesRect(rect, playerId) {
+export function fillTilesRect(rect, playerId) {
 	const count = fillRect(arenaTiles, arenaWidth, arenaHeight, rect, playerId);
 	messenger.send.notifyAreasFilled([{
 		rect: {

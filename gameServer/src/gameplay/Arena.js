@@ -43,8 +43,9 @@ export class Arena {
 	 * @param {number} width
 	 * @param {number} height
  	 * @param {boolean[][]} walls
+	 * @param {import('./Game.js').Game} game
 	 */
-	constructor(width, height, walls) {
+	constructor(width, height, walls,game) {
 		this.#width = width;
 		this.#height = height;
 
@@ -64,6 +65,9 @@ export class Arena {
 					});
 				}
 			},
+			fill_spawn_finished: (id)=>{
+				game.playerFinishSpawn(id);
+			}
 		});
 		this.#messenger.send.init(width, height, walls);
 	}
@@ -107,6 +111,14 @@ export class Arena {
 	 */
 	fillPlayerSpawn(pos, playerId) {
 		return this.#messenger.send.fillPlayerSpawn(pos.x, pos.y, playerId);
+	}
+
+	/**
+	 * Stop the animation
+	 * @param {number} id
+	 */
+	stopAnimation(id) {
+		return this.#messenger.send.stopAnimation(id);
 	}
 
 	/**
