@@ -4,14 +4,21 @@ import { Vec2 } from "renda";
  * Creates a 2d array of numbers, each set to 0 except for the border, which is -1.
  * @param {number} width
  * @param {number} height
+ * @param {boolean[][]} walls
  */
-export function createArenaTiles(width, height) {
+export function createArenaTiles(width, height, walls = []) {
 	/** @type {number[][]} */
 	const tiles = [];
 	// Create the tiles of the arena
 	for (let x = 0; x < width; x++) {
 		const column = new Array(height).fill(0);
 		tiles.push(column);
+	}
+
+	for(let y = 0; y<Math.min(height,walls.length); y++){
+		for(let x = 0; x<Math.min(width,walls[y].length); x++){
+			tiles[x][y] = walls[y][x] ? -1 : 0;
+		}
 	}
 
 	// Create the border of the arena
@@ -61,6 +68,7 @@ export function fillRect(tiles, tilesWidth, tilesHeight, rect, value) {
 			tiles[x][y] = value;
 		}
 	}
+	return (rect.max.x-rect.min.x)*(rect.max.y-rect.min.y);
 }
 
 /**

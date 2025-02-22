@@ -2,6 +2,7 @@ import { Main } from "./Main.js";
 import { parse as parseArgs } from "https://deno.land/std@0.198.0/flags/mod.ts";
 import { basename } from "https://deno.land/std@0.198.0/path/mod.ts";
 import { validGamemodes } from "./gameplay/Game.js";
+import { parse as yaml_parse } from "jsr:@std/yaml";
 
 /** @type {Main?} */
 let main = null;
@@ -56,6 +57,8 @@ if (import.meta.main) {
     Sets the game mode of the game. Valid values are:
     ${validGamemodes.join(" ")}
     Example: ${executableName} --gameMode default
+-w --walls
+    A file with the walls.
 `);
 	} else {
 		const port = args.p || args.port || 8080;
@@ -63,6 +66,8 @@ if (import.meta.main) {
 		let arenaWidth = parseInt(args.arenaWidth || 100);
 		let arenaHeight = parseInt(args.arenaHeight || 100);
 		const arenaSize = parseInt(args.s || args.arenaSize || 0);
+		const config = yaml_parse((new TextDecoder('utf-8')).decode(Deno.readFileSync(args.walls)));
+		const walls = config.Map;
 		const gameMode = args.g || args.gameMode || "default";
 		if (!validGamemodes.includes(gameMode)) {
 			throw new Error(`"${gameMode}" is not a valid gamemode.`);
@@ -74,6 +79,7 @@ if (import.meta.main) {
 		const main = init({
 			arenaWidth,
 			arenaHeight,
+			walls,
 			gameMode,
 		});
 		main.init({ port, hostname });

@@ -42,12 +42,13 @@ export class Arena {
 	/**
 	 * @param {number} width
 	 * @param {number} height
+ 	 * @param {boolean[][]} walls
 	 */
-	constructor(width, height) {
+	constructor(width, height, walls) {
 		this.#width = width;
 		this.#height = height;
 
-		this.#tiles = createArenaTiles(width, height);
+		this.#tiles = createArenaTiles(width, height, walls);
 
 		this.#worker = new Worker(new URL("./arenaWorker/mod.js", import.meta.url), {
 			type: "module",
@@ -64,7 +65,7 @@ export class Arena {
 				}
 			},
 		});
-		this.#messenger.send.init(width, height);
+		this.#messenger.send.init(width, height, walls);
 	}
 
 	/** @type {Set<OnRectFilledCallback>} */
@@ -105,9 +106,7 @@ export class Arena {
 	 * @param {number} playerId
 	 */
 	fillPlayerSpawn(pos, playerId) {
-		this.#messenger.send.fillPlayerSpawn(pos.x, pos.y, playerId);
-		const size = PLAYER_SPAWN_RADIUS * 2 + 1;
-		return size * size;
+		return this.#messenger.send.fillPlayerSpawn(pos.x, pos.y, playerId);
 	}
 
 	/**

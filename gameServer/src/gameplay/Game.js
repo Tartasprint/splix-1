@@ -50,15 +50,17 @@ export class Game {
 	 * @param {Object} options
 	 * @param {number} [options.arenaWidth]
 	 * @param {number} [options.arenaHeight]
+	 * @param {boolean[][]} [options.walls]
 	 * @param {GameModes} [options.gameMode]
 	 */
 	constructor(applicationLoop, {
 		arenaWidth = 600,
 		arenaHeight = 600,
+		walls = [],
 		gameMode = "default",
 	} = {}) {
 		this.#gameMode = gameMode;
-		this.#arena = new Arena(arenaWidth, arenaHeight);
+		this.#arena = new Arena(arenaWidth, arenaHeight, walls);
 		this.#arena.onRectFilled((rect, tileValue) => {
 			for (const player of this.getOverlappingViewportPlayersForRect(rect)) {
 				const { colorId, patternId } = this.getTileTypeForMessage(player, tileValue);
@@ -136,7 +138,7 @@ export class Game {
 	 * @returns {{position: Vec2, direction: import("./Player.js").UnpausedDirection}}
 	 */
 	getNewSpawnPosition() {
-		const position = new Vec2(
+		const position = true ? new Vec2(4,4) : new Vec2(
 			Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.width - PLAYER_SPAWN_RADIUS - 1, Math.random())),
 			Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.height - PLAYER_SPAWN_RADIUS - 1, Math.random())),
 		);

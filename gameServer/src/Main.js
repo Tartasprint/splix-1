@@ -7,18 +7,30 @@ export class Main {
 	 * @param {Object} options
 	 * @param {number} options.arenaWidth
 	 * @param {number} options.arenaHeight
+	 * @param {string} options.walls
 	 * @param {import("./gameplay/Game.js").GameModes} [options.gameMode]
 	 */
 	constructor({
 		arenaWidth,
 		arenaHeight,
+		walls,
 		gameMode = "default",
 	}) {
+		console.log("hey",walls);
+		let w = [];
+		for(const line of walls.split('\n')){
+			let l = []
+			for(const char of line){
+				l.push(char === '#');
+			}
+			w.push(l)
+		}
 		this.applicationLoop = new ApplicationLoop();
 		this.websocketManager = new WebSocketManager();
 		this.game = new Game(this.applicationLoop, {
 			arenaWidth,
 			arenaHeight,
+			walls: w,
 			gameMode,
 		});
 		this.game.onPlayerCountChange((playerCount) => {

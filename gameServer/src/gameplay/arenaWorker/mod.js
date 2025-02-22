@@ -1,7 +1,7 @@
 import { TypedMessenger, Vec2 } from "renda";
 import { compressTiles, createArenaTiles, serializeRect } from "../../util/util.js";
 import { PLAYER_SPAWN_RADIUS } from "../../config.js";
-import { fillRect } from "../../util/util.js";
+import { fillRect, clampRect } from "../../util/util.js";
 import { initializeMask, updateCapturedArea } from "./updateCapturedArea.js";
 import { PlayerBoundsTracker } from "./PlayerBoundsTracker.js";
 import { getMinimapPart } from "./getMinimapPart.js";
@@ -23,11 +23,12 @@ const arenaWorkerHandlers = {
 	/**
 	 * @param {number} width
 	 * @param {number} height
+	 * @param {boolean[][]} walls
 	 */
-	init(width, height) {
+	init(width, height, walls) {
 		arenaWidth = width;
 		arenaHeight = height;
-		arenaTiles = createArenaTiles(width, height);
+		arenaTiles = createArenaTiles(width, height, walls);
 		initializeMask(width, height);
 	},
 	/**
@@ -42,8 +43,28 @@ const arenaWorkerHandlers = {
 			min: center.clone().subScalar(PLAYER_SPAWN_RADIUS),
 			max: center.clone().addScalar(PLAYER_SPAWN_RADIUS + 1),
 		};
-		fillTilesRect(rect, playerId);
+		let count = 0;
+		for (let x = rect.min.x; x < rect.max.x; x++) {
+			for (let y = rect.min.y; y < rect.max.y; y++) {
+				if(arenaTiles[x][y] !== -1){
+					arenaTiles[x][y] = playerId;
+					count+=1;
+				}
+			}
+		}
+
+		const tiles = compressTiles(rect, (x,y) => arenaTiles[x][y] == playerId).map(({rect}) => ({
+			rect: {
+				minX: rect.min.x,
+				minY: rect.min.y,
+				maxX: rect.max.x,
+				maxY: rect.max.y,
+			},
+			tileValue: playerId,
+		}));
+		messenger.send.notifyAreasFilled(tiles);
 		boundsTracker.initializePlayer(playerId, rect);
+		return count;
 	},
 	/**
 	 * Fills the tiles that are covered with a player trail.
@@ -136,7 +157,7 @@ messenger.initializeWorkerContext(arenaWorkerHandlers);
  * @param {number} playerId
  */
 function fillTilesRect(rect, playerId) {
-	fillRect(arenaTiles, arenaWidth, arenaHeight, rect, playerId);
+	const count = fillRect(arenaTiles, arenaWidth, arenaHeight, rect, playerId);
 	messenger.send.notifyAreasFilled([{
 		rect: {
 			minX: rect.min.x,
@@ -146,4 +167,5 @@ function fillTilesRect(rect, playerId) {
 		},
 		tileValue: playerId,
 	}]);
+	return count;
 }

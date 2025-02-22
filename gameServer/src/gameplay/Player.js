@@ -236,8 +236,9 @@ export class Player {
 			}
 		});
 
-		const capturedTileCount = game.arena.fillPlayerSpawn(this.#currentPosition, id);
-		this.#setCapturedTileCount(capturedTileCount);
+		game.arena.fillPlayerSpawn(this.#currentPosition, id).then( capturedTileCount => {
+			this.#setCapturedTileCount(capturedTileCount);
+		});
 
 		this.#joinTime = performance.now();
 
@@ -704,6 +705,7 @@ export class Player {
 			this.#currentPosition.x <= 0 || this.#currentPosition.y <= 0 ||
 			this.#currentPosition.x >= this.game.arena.width - 1 ||
 			this.#currentPosition.y >= this.game.arena.height - 1
+			|| this.game.arena.getTileValue(this.#currentPosition) == -1
 		) {
 			this.#killPlayer(this, "arena-bounds");
 		}
