@@ -57,18 +57,24 @@ if (import.meta.main) {
     Sets the game mode of the game. Valid values are:
     ${validGamemodes.join(" ")}
     Example: ${executableName} --gameMode default
--w --walls
-    A file with the walls.
+--map
+    A file with the configuration of the map.
 `);
 	} else {
 		const port = args.p || args.port || 8080;
 		const hostname = args.h || args.hostname || "127.0.0.1";
-		let arenaWidth = parseInt(args.arenaWidth || 100);
-		let arenaHeight = parseInt(args.arenaHeight || 100);
-		const arenaSize = parseInt(args.s || args.arenaSize || 0);
-		const config = yaml_parse((new TextDecoder('utf-8')).decode(Deno.readFileSync(args.walls)));
-		const walls = config.Map;
-		const gameMode = args.g || args.gameMode || "default";
+		let config;
+		if((typeof args.map === 'string' || args.map instanceof String) && args.map.length > 0){
+			config = yaml_parse((new TextDecoder('utf-8')).decode(Deno.readFileSync(args.map)));
+		} else {
+			config = {};
+		}
+		let arenaWidth = parseInt(args.arenaWidth || config.Width || 100);
+		let arenaHeight = parseInt(args.arenaHeight || config.Height|| 100);
+		const arenaSize = parseInt(args.s || args.arenaSize || config.Size || 0);
+
+		const walls = config.Map || "";
+		const gameMode = args.g || args.gameMode || config.GameMode || "default";
 		if (!validGamemodes.includes(gameMode)) {
 			throw new Error(`"${gameMode}" is not a valid gamemode.`);
 		}

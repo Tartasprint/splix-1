@@ -16,7 +16,6 @@ export class Main {
 		walls,
 		gameMode = "default",
 	}) {
-		console.log("hey",walls);
 		let w = [];
 		for(const line of walls.split('\n')){
 			let l = []
