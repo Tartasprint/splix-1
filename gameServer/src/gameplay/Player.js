@@ -9,7 +9,7 @@ import {
 	VALID_SKIN_COLOR_RANGE,
 	VIEWPORT_EDGE_CHUNK_SIZE,
 } from "../config.js";
-import { lerp, Vec2 } from "renda";
+import { lerp, Vec2 } from "../../../renda/mod.js";
 import { checkTrailSegment } from "../util/util.js";
 import { PlayerEventHistory } from "./PlayerEventHistory.js";
 import { getMainInstance } from "../mainInstance.js";

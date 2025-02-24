@@ -1,4 +1,4 @@
-import { Vec2 } from "renda";
+import { Vec2 } from "../../../../renda/mod.js";
 import { compressTiles } from "../../util/util.js";
 import { CircularQueue } from "../../util/CircularQueue.js";
 

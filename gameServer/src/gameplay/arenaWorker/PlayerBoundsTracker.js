@@ -1,4 +1,4 @@
-import { Vec2 } from "renda";
+import { Vec2 } from "../../../../renda/mod.js";
 /**
  * Keeps track of the bounding boxes of player areas.
  * We don't want to perform flood fill operations on the entire arena.

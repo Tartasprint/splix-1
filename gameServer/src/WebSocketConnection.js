@@ -1,4 +1,4 @@
-import { clamp, Vec2 } from "renda";
+import { clamp, Vec2 } from "../../renda/mod.js";
 import {
 	UPDATES_VIEWPORT_RECT_SIZE,
 	VALID_PLAYER_NAME_LENGTH,

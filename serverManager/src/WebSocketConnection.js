@@ -1,4 +1,4 @@
-import { TypedMessenger } from "renda";
+import { TypedMessenger } from "../../renda/mod.js";
 
 /** @typedef {ReturnType<WebSocketConnection["getResponseHandlers"]>} ServerManagerResponseHandlers */
 

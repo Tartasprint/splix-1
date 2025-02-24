@@ -1,7 +1,7 @@
 import { ApplicationLoop } from "./ApplicationLoop.js";
 import { Game } from "./gameplay/Game.js";
 import { WebSocketManager } from "./WebSocketManager.js";
-import { Vec2 } from "renda";
+import { Vec2 } from "../../renda/mod.js";
 
 export class Main {
 	/**

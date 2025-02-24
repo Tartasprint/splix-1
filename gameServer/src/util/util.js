@@ -1,4 +1,4 @@
-import { Vec2 } from "renda";
+import { Vec2 } from "../../../renda/mod.js";
 
 /**
  * Creates a 2d array of numbers, each set to 0 except for the border, which is -1.
@@ -73,8 +73,8 @@ export function fillRect(tiles, tilesWidth, tilesHeight, rect, value) {
 
 /**
  * @typedef Rect
- * @property {import("renda").Vec2} min
- * @property {import("renda").Vec2} max
+ * @property {Vec2} min
+ * @property {Vec2} max
  */
 
 /**
@@ -211,9 +211,9 @@ export function compressTiles(rect, cb) {
 
 /**
  * Checks if a point lies within a trail segment.
- * @param {import("renda").Vec2} point
- * @param {import("renda").Vec2} start
- * @param {import("renda").Vec2} end
+ * @param {Vec2} point
+ * @param {Vec2} start
+ * @param {Vec2} end
  */
 export function checkTrailSegment(point, start, end) {
 	if (start.x != end.x && start.y != end.y) {

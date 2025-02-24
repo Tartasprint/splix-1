@@ -1,46 +1,13 @@
-import { generateTypes } from "https://deno.land/x/deno_tsc_helper@v0.1.2/mod.js";
-import { vendor } from "https://raw.githubusercontent.com/jespertheend/dev/9ae4c87bc54156c47d4f097a61615eaa2c716904/mod.js";
-import { serveDir } from "$std/http/file_server.ts";
-import { resolve } from "$std/path/mod.ts";
-import { setCwd } from "chdir-anywhere";
+import { serveDir } from "jsr:@std/http/file-server";
+import { resolve } from "jsr:@std/path";
+import { setCwd } from "./chdir_anywhere.js";
 import { init as initGameServer } from "../gameServer/src/mainInstance.js";
 import { init as initServerManager } from "../serverManager/src/mainInstance.js";
-import "$std/dotenv/load.ts";
+import "jsr:@std/dotenv/load";
 import { INSECURE_LOCALHOST_SERVERMANAGER_TOKEN } from "../shared/config.js";
 setCwd();
 
 Deno.chdir("..");
-
-vendor({
-	entryPoints: [
-		"https://raw.githubusercontent.com/rendajs/Renda/705c5a01bc4d3ca4a282fff1a7a8567d1be7ce04/mod.js",
-	],
-	outDir: "./deps",
-});
-
-generateTypes({
-	include: [
-		"scripts/",
-		"gameServer/",
-		"shared/",
-	],
-	importMap: "importmap.json",
-	excludeUrls: [
-		"https://raw.githubusercontent.com/rendajs/Renda/5722ef6433ed217715bb4ef0ab2bbd6a96b3992d/studio/src/styles/projectSelectorStyles.js",
-		"https://raw.githubusercontent.com/rendajs/Renda/5722ef6433ed217715bb4ef0ab2bbd6a96b3992d/studio/src/styles/studioStyles.js",
-		"https://raw.githubusercontent.com/rendajs/Renda/5722ef6433ed217715bb4ef0ab2bbd6a96b3992d/studio/src/styles/shadowStyles.js",
-		"https://raw.githubusercontent.com/rendajs/Renda/5722ef6433ed217715bb4ef0ab2bbd6a96b3992d/studio/deps/rollup-plugin-resolve-url-objects.js",
-		"https://raw.githubusercontent.com/rendajs/Renda/5722ef6433ed217715bb4ef0ab2bbd6a96b3992d/studio/deps/rollup.browser.js",
-		"rollup",
-	],
-	exactTypeModules: {
-		"$rollup": "https://cdn.jsdelivr.net/npm/rollup@3.5.0/dist/rollup.d.ts",
-		"$rollup-plugin-alias": "https://cdn.jsdelivr.net/npm/@rollup/plugin-alias@4.0.2/types/index.d.ts",
-		"$rollup-plugin-replace": "https://cdn.jsdelivr.net/npm/@rollup/plugin-replace@5.0.4/types/index.d.ts",
-		"$terser": "https://cdn.jsdelivr.net/npm/terser@5.16.0/tools/terser.d.ts",
-	},
-	logLevel: "WARNING",
-});
 
 if (!Deno.args.includes("--no-init")) {
 	const gameServer = initGameServer({

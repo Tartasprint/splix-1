@@ -12,7 +12,7 @@
  * The `PlayerEventHistory` class keeps track of events so that they can be undone should the player move back.
  */
 
-import { Vec2 } from "renda";
+import { Vec2 } from "../../../renda/mod.js";
 import { MAX_UNDO_EVENT_TIME } from "../config.js";
 
 /**

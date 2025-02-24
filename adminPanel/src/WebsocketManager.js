@@ -1,5 +1,5 @@
 import { PersistentWebSocket } from "../../shared/PersistentWebSocket.js";
-import { TypedMessenger } from "renda";
+import { TypedMessenger } from "../../renda/mod.js";
 
 /** @typedef {ReturnType<WebSocketManager["getResponseHandlers"]>} AdminPanelResponseHandlers */
 
@@ -25,7 +25,7 @@ export class WebSocketManager {
 			endpoint.protocol = "wss:";
 		}
 
-		/** @type {PersistentWebSocket<import("renda").TypedMessengerMessageSendData<AdminPanelResponseHandlers, import("../../serverManager/src/WebSocketConnection.js").ServerManagerResponseHandlers>>} */
+		/** @type {PersistentWebSocket<import("../../renda/mod.js").TypedMessengerMessageSendData<AdminPanelResponseHandlers, import("../../serverManager/src/WebSocketConnection.js").ServerManagerResponseHandlers>>} */
 		const socket = new PersistentWebSocket(endpoint.href);
 
 		this.#messenger = new TypedMessenger();

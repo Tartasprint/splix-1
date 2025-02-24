@@ -1,4 +1,4 @@
-import { mapValue, Vec2 } from "renda";
+import { mapValue, Vec2 } from "../../../../renda/mod.js";
 
 /**
  * @param {number} part

@@ -1,4 +1,4 @@
-import { clamp, TypedMessenger } from "renda";
+import { clamp, TypedMessenger } from "../../renda/mod.js";
 import { initializeControlSocketMessage } from "../../gameServer/src/WebSocketConnection.js";
 import { PersistentWebSocket } from "../../shared/PersistentWebSocket.js";
 import { LeaderboardManager } from "./LeaderboardManager.js";
@@ -65,7 +65,7 @@ export class GameServer {
 	#displayName = "";
 	#endpoint = "";
 	#validEndpoint = false;
-	/** @type {PersistentWebSocket<import("renda").TypedMessengerMessageSendData<ServerManagerResponseHandlers, import("../../gameServer/src/ControlSocketConnection.js").ControlSocketResponseHandlers>>?} */
+	/** @type {PersistentWebSocket<import("../../renda/mod.js").TypedMessengerMessageSendData<ServerManagerResponseHandlers, import("../../gameServer/src/ControlSocketConnection.js").ControlSocketResponseHandlers>>?} */
 	#persistentWebSocket = null;
 	/** @type {TypedMessenger<ServerManagerResponseHandlers, import("../../gameServer/src/ControlSocketConnection.js").ControlSocketResponseHandlers>} */
 	#messenger = new TypedMessenger();

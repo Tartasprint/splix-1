@@ -1,4 +1,4 @@
-import { clamp, mapValue } from "renda";
+import { clamp, mapValue } from "../renda/mod.js";
 
 /**
  * Tracks which IPs have recently attempted to perform an action and limits their rate of invalid attempts.

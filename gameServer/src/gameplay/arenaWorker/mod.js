@@ -1,4 +1,4 @@
-import { TypedMessenger, Vec2 } from "renda";
+import { TypedMessenger, Vec2 } from "../../../../renda/mod.js";
 import { compressTiles, createArenaTiles, serializeRect } from "../../util/util.js";
 import { PLAYER_SPAWN_RADIUS } from "../../config.js";
 import { fillRect, clampRect } from "../../util/util.js";

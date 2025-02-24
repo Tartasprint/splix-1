@@ -1,6 +1,6 @@
 /** @typedef {"default" | "drawing"} GameModes */
 
-import { lerp, SingleInstancePromise, Vec2 } from "renda";
+import { lerp, SingleInstancePromise, Vec2 } from "../../../renda/mod.js";
 import { Arena } from "./Arena.js";
 import { Player } from "./Player.js";
 import { WebSocketConnection } from "../WebSocketConnection.js";

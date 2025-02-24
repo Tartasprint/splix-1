@@ -1,6 +1,6 @@
-import { resolve } from "$std/path/mod.ts";
+import { resolve } from "jsr:@std/path";
 import { buildExecutable } from "../shared/buildExecutable.js";
-import { setCwd } from "chdir-anywhere";
+import { setCwd } from "./chdir_anywhere.js";
 setCwd();
 Deno.chdir("..");
 
