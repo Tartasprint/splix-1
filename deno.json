@@ -10,13 +10,22 @@
 		"build-adminpanel": "deno run -A scripts/buildAdminPanel.js",
 		"fmt": "deno fmt"
 	},
+	"compilerOptions": {
+		"lib": ["dom", "deno.ns", "deno.worker"],
+		"checkJs": true
+	},
+	"exclude": [
+		"client/",
+		"adminPanel/"
+	],
 	"importMap": "importmap.json",
 	"fmt": {
 		"files": {
 			"exclude": [
 				".denoTypes",
 				"deps",
-				"client/out"
+				"client",
+				"adminPanel"
 			]
 		},
 		"options": {

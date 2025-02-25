@@ -1,7 +1,5 @@
 import { parse as parseArgs } from "jsr:@std/flags";
-import { Tar } from "$std/archive/tar.ts";
 import * as path from "jsr:@std/path";
-import * as streams from "jsr:@std/streams";
 import { tar_dir } from "../scripts/tar.js";
 
 /**
@@ -79,7 +77,10 @@ export async function buildExecutable({
 	if (args.archive) {
 		for (const target of targets) {
 			console.log("Archiving " + target);
-			await tar_dir(path.resolve(outputDir, target),path.resolve(outputDir, outputFileName + "_" + target + ".tar"))
+			await tar_dir(
+				path.resolve(outputDir, target),
+				path.resolve(outputDir, outputFileName + "_" + target + ".tar"),
+			);
 			await Deno.remove(path.resolve(outputDir, target), { recursive: true });
 		}
 	}

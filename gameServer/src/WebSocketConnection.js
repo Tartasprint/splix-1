@@ -5,8 +5,9 @@ import {
 	VALID_SKIN_COLOR_RANGE,
 	VALID_SKIN_PATTERN_RANGE,
 } from "./config.js";
-import { Player } from "./gameplay/Player.js";
 import { ControlSocketConnection } from "./ControlSocketConnection.js";
+
+/** @typedef {import('./gameplay/Player.js').Player} Player */
 
 /**
  * - `"add-segment"` - adds a new polygon to the current trail.
@@ -208,7 +209,7 @@ export class WebSocketConnection {
 		const parsed = JSON.parse(data);
 
 		if (this.#controlSocket) {
-			this.#controlSocket.onMessage(parsed);
+			await this.#controlSocket.onMessage(parsed);
 		} else if (parsed == initializeControlSocketMessage) {
 			this.#controlSocket = new ControlSocketConnection(this);
 		}
@@ -217,7 +218,7 @@ export class WebSocketConnection {
 	/**
 	 * @param {ArrayBuffer} data
 	 */
-	async onMessage(data) {
+	onMessage(data) {
 		if (this.#controlSocket) return;
 
 		const view = new DataView(data);
@@ -823,9 +824,9 @@ export class WebSocketConnection {
 
 	/**
 	 * @param {number} now
-	 * @param {number} dt
+	 * @param {number} _dt
 	 */
-	loop(now, dt) {
+	loop(now, _dt) {
 		if (now - this.#lastPingTime > 1000 * 60 * 5) {
 			this.close();
 		}

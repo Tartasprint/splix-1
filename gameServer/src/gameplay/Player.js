@@ -6,7 +6,6 @@ import {
 	MIN_TILES_VIEWPORT_RECT_SIZE,
 	PLAYER_TRAVEL_SPEED,
 	UPDATES_VIEWPORT_RECT_SIZE,
-	VALID_SKIN_COLOR_RANGE,
 	VIEWPORT_EDGE_CHUNK_SIZE,
 } from "../config.js";
 import { lerp, Vec2 } from "../../../renda/mod.js";
@@ -241,9 +240,9 @@ export class Player {
 			}
 		});
 
-		game.arena.fillPlayerSpawn(this.#currentPosition, id).then( ({count,anim_id}) => {
+		game.arena.fillPlayerSpawn(this.#currentPosition, id).then(({ count, anim_id }) => {
 			this.#setCapturedTileCount(count);
-			this.#spawnAnimId= anim_id;
+			this.#spawnAnimId = anim_id;
 		});
 
 		this.#joinTime = performance.now();
@@ -254,7 +253,7 @@ export class Player {
 		this.#sendMyRank();
 	}
 
-	finishSpawn(){
+	finishSpawn() {
 		this.#spawnAnimId = -1;
 	}
 
@@ -623,10 +622,10 @@ export class Player {
 	}
 
 	/**
-	 * @param {number} now
+	 * @param {number} _now
 	 * @param {number} dt
 	 */
-	loop(now, dt) {
+	loop(_now, dt) {
 		if (this.currentDirection != "paused" && !this.dead) {
 			this.#nextTileProgress += dt * PLAYER_TRAVEL_SPEED;
 			if (this.#nextTileProgress > 1) {
@@ -714,8 +713,8 @@ export class Player {
 		if (
 			this.#currentPosition.x <= 0 || this.#currentPosition.y <= 0 ||
 			this.#currentPosition.x >= this.game.arena.width - 1 ||
-			this.#currentPosition.y >= this.game.arena.height - 1
-			|| this.game.arena.getTileValue(this.#currentPosition) == -1
+			this.#currentPosition.y >= this.game.arena.height - 1 ||
+			this.game.arena.getTileValue(this.#currentPosition) == -1
 		) {
 			this.#killPlayer(this, "arena-bounds");
 		}
@@ -896,7 +895,7 @@ export class Player {
 		this.game.broadcastUndoPlayerDeath(this);
 	}
 
-	#permanentlyDie() {		
+	#permanentlyDie() {
 		if (this.#permanentlyDead) return;
 		this.game.arena.stopAnimation(this.#spawnAnimId);
 		this.#permanentlyDead = true;

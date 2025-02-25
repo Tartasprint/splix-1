@@ -1,11 +1,11 @@
 import { TypedMessenger, Vec2 } from "../../../../renda/mod.js";
-import { compressTiles, createArenaTiles, serializeRect } from "../../util/util.js";
+import { compressTiles, createArenaTiles } from "../../util/util.js";
 import { PLAYER_SPAWN_RADIUS } from "../../config.js";
-import { fillRect, clampRect } from "../../util/util.js";
+import { fillRect } from "../../util/util.js";
 import { initializeMask, updateCapturedArea } from "./updateCapturedArea.js";
 import { PlayerBoundsTracker } from "./PlayerBoundsTracker.js";
 import { getMinimapPart } from "./getMinimapPart.js";
-import { blink_block, filling_spawn, running } from "./animations.js";
+import { filling_spawn, running } from "./animations.js";
 
 /**
  * Stores which tiles have been filled and by which player.
@@ -47,14 +47,14 @@ const arenaWorkerHandlers = {
 		let count = 0;
 		for (let x = rect.min.x; x < rect.max.x; x++) {
 			for (let y = rect.min.y; y < rect.max.y; y++) {
-				if(arenaTiles[x][y] !== -1){
+				if (arenaTiles[x][y] !== -1) {
 					arenaTiles[x][y] = playerId;
-					count+=1;
+					count += 1;
 				}
 			}
 		}
 
-		const tiles = compressTiles(rect, (x,y) => arenaTiles[x][y] == playerId).map(({rect}) => ({
+		const tiles = compressTiles(rect, (x, y) => arenaTiles[x][y] == playerId).map(({ rect }) => ({
 			rect: {
 				minX: rect.min.x,
 				minY: rect.min.y,
@@ -65,15 +65,15 @@ const arenaWorkerHandlers = {
 		}));
 		messenger.send.notifyAreasFilled(tiles);
 		boundsTracker.initializePlayer(playerId, rect);
-		const anim_id = filling_spawn(fillTilesRect,messenger,x,y+1,playerId,5_000,2000,2_000);
-		return {count,anim_id};
+		const anim_id = filling_spawn(fillTilesRect, messenger, x, y + 1, playerId, 5_000, 2000, 2_000);
+		return { count, anim_id };
 	},
 
 	/**
 	 * Stop an animation.
 	 * @param {number} id the id of the animation to stop
 	 */
-	stopAnimation(id){
+	stopAnimation(id) {
 		console.log("Stopping", id);
 		running.get(id)?.stop(messenger);
 		running.delete(id);

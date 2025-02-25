@@ -75,8 +75,8 @@ export function updateCapturedArea(arenaTiles, playerId, bounds, unfillableLocat
 		for (let j = bounds.min.y; j < bounds.max.y; j++) {
 			if (arenaTiles[i][j] == playerId) {
 				grid[offset + j] = PLAYER_BLOCK;
-			} else if (arenaTiles[i][j] == -1 && bounds.min.x != i && bounds.min.y != j){
-				unfillableLocations.push([i,j]);
+			} else if (arenaTiles[i][j] == -1 && bounds.min.x != i && bounds.min.y != j) {
+				unfillableLocations.push([i, j]);
 			} else {
 				grid[offset + j] = FILLABLE_BLOCK;
 			}

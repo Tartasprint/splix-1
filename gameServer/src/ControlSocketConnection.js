@@ -1,5 +1,4 @@
 import { TypedMessenger } from "../../renda/mod.js";
-import { WebSocketConnection } from "./WebSocketConnection.js";
 
 function createResponseHandlers() {
 	return {};
@@ -16,7 +15,7 @@ export class ControlSocketConnection {
 	}
 
 	/**
-	 * @param {WebSocketConnection} connection
+	 * @param {import('./WebSocketConnection.js').WebSocketConnection} connection
 	 */
 	constructor(connection) {
 		this.#messenger.setSendHandler((data) => {
@@ -26,9 +25,9 @@ export class ControlSocketConnection {
 	}
 
 	/**
-	 * @param {import("../../renda/mod.js").TypedMessengerMessageSendData<ControlSocketResponseHandlers, import("../../serverManager/src/GameServer.js").ServerManagerResponseHandlers>} data
+	 * @param {import("../../renda/TypeMessenger.js").TypedMessengerMessageSendData<ControlSocketResponseHandlers, import("../../serverManager/src/GameServer.js").ServerManagerResponseHandlers>} data
 	 */
-	onMessage(data) {
-		this.#messenger.handleReceivedMessage(data);
+	async onMessage(data) {
+		await this.#messenger.handleReceivedMessage(data);
 	}
 }

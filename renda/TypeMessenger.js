@@ -396,7 +396,7 @@ export class TypedMessenger {
 		this.globalTimeout = globalTimeout;
 
 		const proxy = new Proxy({}, {
-			get: (target, prop, receiver) => {
+			get: (_target, prop, _receiver) => {
 				if (typeof prop == "symbol") {
 					return undefined;
 				}
@@ -421,7 +421,7 @@ export class TypedMessenger {
 		this.send = /** @type {TypedMessengerProxy<TReq>} */ (proxy);
 
 		const sendWithOptionsProxy = new Proxy({}, {
-			get: (target, prop, receiver) => {
+			get: (_target, prop, _receiver) => {
 				if (typeof prop == "symbol") {
 					return undefined;
 				}
@@ -487,11 +487,11 @@ export class TypedMessenger {
 	 */
 	initializeWorkerContext(responseHandlers) {
 		this.setSendHandler((data) => {
-			globalThis.postMessage(data["sendData"], {
+			self.postMessage(data["sendData"], {
 				transfer: data["transfer"],
 			});
 		});
-		globalThis.addEventListener("message", (event) => {
+		self.addEventListener("message", (event) => {
 			this.handleReceivedMessage(event.data);
 		});
 		this.setResponseHandlers(responseHandlers);
@@ -589,10 +589,14 @@ export class TypedMessenger {
 	async handleReceivedMessage(data) {
 		if (data["direction"] == "request") {
 			if (!this.responseHandlers) {
-				throw new Error("Failed to handle message, no request handlers set. Make sure to call `setResponseHandlers` before handling messages.");
+				throw new Error(
+					"Failed to handle message, no request handlers set. Make sure to call `setResponseHandlers` before handling messages.",
+				);
 			}
 			if (!this.sendHandler) {
-				throw new Error("Failed to handle message, no send handler set. Make sure to call `setSendHandler` before handling messages.");
+				throw new Error(
+					"Failed to handle message, no send handler set. Make sure to call `setSendHandler` before handling messages.",
+				);
 			}
 			const handler = this.responseHandlers[data["type"]];
 			let returnValue;
@@ -613,7 +617,10 @@ export class TypedMessenger {
 
 			const castReturn = /** @type {TypedMessengerRequestHandlerReturn} */ (returnValue);
 			let respondOptions;
-			if (castReturn && typeof castReturn == "object" && "$respondOptions" in castReturn && castReturn.$respondOptions) {
+			if (
+				castReturn && typeof castReturn == "object" && "$respondOptions" in castReturn &&
+				castReturn.$respondOptions
+			) {
 				respondOptions = castReturn.$respondOptions;
 			}
 			if (!didThrow && respondOptions) {
@@ -624,16 +631,18 @@ export class TypedMessenger {
 				returnValue = respondOptions.returnValue;
 			}
 
-			await this.sendHandler(/** @type {TypedMessengerResponseMessageHelper<TRes, typeof data.type>} */ ({
-				"sendData": {
-					"direction": "response",
-					"id": data["id"],
-					"didThrow": didThrow,
-					"type": data["type"],
-					"returnValue": returnValue,
-				},
-				transfer,
-			}));
+			await this.sendHandler(
+				/** @type {TypedMessengerResponseMessageHelper<TRes, typeof data.type>} */ ({
+					"sendData": {
+						"direction": "response",
+						"id": data["id"],
+						"didThrow": didThrow,
+						"type": data["type"],
+						"returnValue": returnValue,
+					},
+					transfer,
+				}),
+			);
 
 			if (respondOptions && respondOptions.afterSendHook) {
 				respondOptions.afterSendHook();
@@ -717,7 +726,9 @@ export class TypedMessenger {
 		const disableResponse = sendOptions.expectResponse == false;
 		const responsePromise = (async () => {
 			if (!this.sendHandler) {
-				throw new Error("Failed to send message, no send handler set. Make sure to call `setSendHandler` before sending messages.");
+				throw new Error(
+					"Failed to send message, no send handler set. Make sure to call `setSendHandler` before sending messages.",
+				);
 			}
 			const requestId = this.lastRequestId++;
 
@@ -739,7 +750,10 @@ export class TypedMessenger {
 							if (this.deserializeErrorHook) {
 								rejectValue = this.deserializeErrorHook(rejectValue);
 							}
-							if (!rejectValue || typeof rejectValue != "object" || !("stack" in rejectValue) || !rejectValue.stack) {
+							if (
+								!rejectValue || typeof rejectValue != "object" || !("stack" in rejectValue) ||
+								!rejectValue.stack
+							) {
 								rejectValue = new Error("An unknown error occurred while handling the message.");
 							}
 							reject(rejectValue);
@@ -750,15 +764,17 @@ export class TypedMessenger {
 				});
 			}
 
-			await this.sendHandler(/** @type {TypedMessengerRequestMessageHelper<TReq, T>} */ ({
-				"sendData": {
-					"direction": "request",
-					"id": requestId,
-					"type": type,
-					"args": args,
-				},
-				transfer: sendOptions.transfer || [],
-			}));
+			await this.sendHandler(
+				/** @type {TypedMessengerRequestMessageHelper<TReq, T>} */ ({
+					"sendData": {
+						"direction": "request",
+						"id": requestId,
+						"type": type,
+						"args": args,
+					},
+					transfer: sendOptions.transfer || [],
+				}),
+			);
 			return await promise;
 		})();
 

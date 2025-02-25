@@ -19,7 +19,7 @@ export class WebSocketManager {
 				try {
 					if (typeof message.data == "string") {
 						const parsed = JSON.parse(message.data);
-						connection.onMessage(parsed);
+						await connection.onMessage(parsed);
 					}
 				} catch (e) {
 					console.error("An error occurred while handling a websocket message", message.data, e);
@@ -29,6 +29,7 @@ export class WebSocketManager {
 				this.#activeConnections.delete(connection);
 			});
 		}, {
+			// deno-lint-ignore require-await
 			async overrideRequestHandler(request) {
 				const url = new URL(request.url);
 				if (url.pathname == "/servermanager/gameservers" || url.pathname == "/gameservers") {

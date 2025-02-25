@@ -3,10 +3,7 @@ import replace from "$rollup-plugin-replace";
 import { terser } from "../shared/rollup-terser-plugin.js";
 import { resolve } from "jsr:@std/path";
 import { copy, ensureDir } from "jsr:@std/fs";
-import * as streams from "jsr:@std/streams";
 import * as path from "jsr:@std/path";
-import * as fs from "jsr:@std/fs";
-import { TarStream } from "jsr:@std/tar";
 import { setCwd } from "./chdir_anywhere.js";
 import { tar_dir } from "./tar.js";
 setCwd();
@@ -35,7 +32,7 @@ const bundle = await rollup({
 		console.error(message.message);
 	},
 	plugins: [
-		replace({
+		replace.default({
 			values: {
 				IS_DEV_BUILD: JSON.stringify(false),
 				CLIENT_VERSION: JSON.stringify(versionArg),
@@ -91,4 +88,4 @@ await copy("static", resolve(distDir, "static"));
 await copy("json", resolve(distDir, "json")); // Legacy
 
 // Archive all files
-tar_dir(distDir,"./out/client.tar")
+tar_dir(distDir, "./out/client.tar");

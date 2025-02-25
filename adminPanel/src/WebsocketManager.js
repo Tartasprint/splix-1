@@ -25,7 +25,7 @@ export class WebSocketManager {
 			endpoint.protocol = "wss:";
 		}
 
-		/** @type {PersistentWebSocket<import("../../renda/mod.js").TypedMessengerMessageSendData<AdminPanelResponseHandlers, import("../../serverManager/src/WebSocketConnection.js").ServerManagerResponseHandlers>>} */
+		/** @type {PersistentWebSocket<import("../../renda/TypeMessenger.js").TypedMessengerMessageSendData<AdminPanelResponseHandlers, import("../../serverManager/src/WebSocketConnection.js").ServerManagerResponseHandlers>>} */
 		const socket = new PersistentWebSocket(endpoint.href);
 
 		this.#messenger = new TypedMessenger();

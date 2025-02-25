@@ -8,30 +8,30 @@ export class Main {
 	 * @param {Object} options
 	 * @param {number} options.arenaWidth
 	 * @param {number} options.arenaHeight
-	 * @param {string} options.walls
+	 * @param {string} [options.walls]
 	 * @param {import("./gameplay/Game.js").GameModes} [options.gameMode]
 	 */
 	constructor({
 		arenaWidth,
 		arenaHeight,
-		walls,
+		walls = "",
 		gameMode = "default",
 	}) {
 		let y = 0;
-		let w = [];
-		let spawns = [];
-		for(const line of walls.split('\n')){
-			let l = []
+		const w = [];
+		const spawns = [];
+		for (const line of walls.split("\n")) {
+			const l = [];
 			let x = 0;
-			for(const char of line){
-				l.push(char === '#');
-				if(char.toUpperCase() === 'X'){
-					spawns.push({p: new Vec2(x,y), occupied: false});
+			for (const char of line) {
+				l.push(char === "#");
+				if (char.toUpperCase() === "X") {
+					spawns.push({ p: new Vec2(x, y), occupied: false });
 				}
-				x+=1;
+				x += 1;
 			}
-			y+=1;
-			w.push(l)
+			y += 1;
+			w.push(l);
 		}
 		this.applicationLoop = new ApplicationLoop();
 		this.websocketManager = new WebSocketManager();
@@ -39,7 +39,7 @@ export class Main {
 			arenaWidth,
 			arenaHeight,
 			walls: w,
-			spawns: spawns.length > 0 ? spawns:null,
+			spawns: spawns.length > 0 ? spawns : null,
 			gameMode,
 		});
 		this.game.onPlayerCountChange((playerCount) => {

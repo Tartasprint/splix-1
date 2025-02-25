@@ -52,7 +52,7 @@ export class Timeout {
 	 */
 	static promise(ms) {
 		/** @type {Promise<void>} */
-		const p = new Promise((resolve, reject) => {
+		const p = new Promise((resolve, _reject) => {
 			setTimeout(() => {
 				resolve();
 			}, ms);

@@ -68,7 +68,7 @@ export class PlayerEventHistory {
 		// Any events outside of the rectangle should be ignored, otherwise we allow the player jump over
 		// certain tiles, such as player trails or the wall.
 		/** @type {import("../util/util.js").Rect} */
-		let allowedRect = {
+		const allowedRect = {
 			min: new Vec2(),
 			max: new Vec2(),
 		};

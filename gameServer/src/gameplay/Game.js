@@ -10,7 +10,6 @@ import {
 	PLAYER_SPAWN_RADIUS,
 	REQUIRED_PLAYER_COUNT_FOR_GLOBAL_LEADERBOARD,
 } from "../config.js";
-import { ApplicationLoop } from "../ApplicationLoop.js";
 
 /**
  * @typedef TileTypeForMessage
@@ -49,12 +48,12 @@ export class Game {
 	}
 
 	/**
-	 * @param {ApplicationLoop} applicationLoop
+	 * @param {import('../ApplicationLoop.js').ApplicationLoop} applicationLoop
 	 * @param {Object} options
 	 * @param {number} [options.arenaWidth]
 	 * @param {number} [options.arenaHeight]
 	 * @param {boolean[][]} [options.walls]
-	 * @param {Vec2[]?} [options.spawns]
+	 * @param {{p:Vec2, occupied: boolean}[]?} [options.spawns]
 	 * @param {GameModes} [options.gameMode]
 	 */
 	constructor(applicationLoop, {
@@ -140,7 +139,11 @@ export class Game {
 		return player;
 	}
 
-	playerFinishSpawn(id){
+	/**
+	 * Called when the player's spawn animation has finished.
+	 * @param {number} id the id of the player concerned.
+	 */
+	playerFinishSpawn(id) {
 		this.#players.get(id)?.finishSpawn();
 	}
 
@@ -149,8 +152,8 @@ export class Game {
 	 */
 	getNewSpawnPosition() {
 		let position;
-		if(this.#spawns){
-			position = this.#spawns[Math.floor(Math.random()*this.#spawns.length)].p;
+		if (this.#spawns) {
+			position = this.#spawns[Math.floor(Math.random() * this.#spawns.length)].p;
 		} else {
 			position = new Vec2(
 				Math.floor(lerp(PLAYER_SPAWN_RADIUS + 1, this.arena.width - PLAYER_SPAWN_RADIUS - 1, Math.random())),

@@ -1,8 +1,6 @@
-import { Timeout } from "../../../shared/Timeout.js";
 import { announceAddrs } from "./announceAddrs.js";
 
 const INITIAL_ACCEPT_BACKOFF_DELAY = 5;
-const MAX_ACCEPT_BACKOFF_DELAY = 1000;
 
 let didRegisterUnhandledRejection = false;
 /**
@@ -61,111 +59,19 @@ export class WebSocketHoster {
 	 * @param {number} port
 	 * @param {string} hostname
 	 */
-	async startServer(port, hostname) {
+	startServer(port, hostname) {
 		const listener = Deno.listen({ port, hostname });
 		announceAddrs([{ protocol: "ws", addr: listener.addr }]);
 		registerUnhandledRejection();
-		while (true) {
-			let conn;
-			try {
-				conn = await listener.accept();
-			} catch (e) {
-				if (
-					// listener closed
-					e instanceof Deno.errors.BadResource ||
-					// TLS handshake errors
-					e instanceof Deno.errors.InvalidData ||
-					e instanceof Deno.errors.UnexpectedEof ||
-					e instanceof Deno.errors.ConnectionReset ||
-					e instanceof Deno.errors.NotConnected
-				) {
-					console.log("catched in startServer:", e);
-					this.#acceptBackoffDelay *= 2;
-					this.#acceptBackoffDelay = Math.min(
-						this.#acceptBackoffDelay,
-						MAX_ACCEPT_BACKOFF_DELAY,
-					);
-					await Timeout.promise(this.#acceptBackoffDelay);
-					continue;
-				}
-
-				throw e;
-			}
-
-			this.#acceptBackoffDelay = INITIAL_ACCEPT_BACKOFF_DELAY;
-
-			let httpConn;
-			try {
-				httpConn = Deno.serveHttp(conn);
-			} catch {
-				// Connection has been closed
-				continue;
-			}
-			this.#handleHttp(httpConn, conn.remoteAddr);
-		}
-	}
-
-	/**
-	 * @param {Deno.HttpConn} httpConn
-	 * @param {Deno.Addr} remoteAddr
-	 */
-	async #handleHttp(httpConn, remoteAddr) {
-		while (true) {
-			let requestEvent;
-			try {
-				requestEvent = await httpConn.nextRequest();
-			} catch (e) {
-				let suppressError = false;
-				if (
-					e instanceof Deno.errors.Http &&
-					e.message == "invalid HTTP method parsed"
-				) {
-					suppressError = true;
-				}
-				// For now we will only show a message rather than throwing the error
-				// We can remove this once we are a little more certain that all possible
-				// errors are handled.
-				if (!suppressError) {
-					console.error("catched in handleHttp():", e);
-				}
-				break;
-			}
-
-			if (requestEvent == null) {
-				// connection has been closed
-				break;
-			}
-
-			let response;
-			try {
-				response = await this.handleRequest(requestEvent.request, remoteAddr);
-			} catch (e) {
-				console.error("catched in handleRequest():", e);
-			}
-			if (!response) {
-				response = new Response("Internal server error", {
-					status: 500,
-				});
-			}
-			try {
-				await requestEvent.respondWith(response);
-			} catch (e) {
-				console.error("catched in respondWith:", e);
-				break;
-			}
-		}
-		try {
-			httpConn.close();
-		} catch {
-			// Already closed
-		}
+		Deno.serve({ port, hostname }, this.handleRequest);
 	}
 
 	/**
 	 * @param {Request} request
-	 * @param {Deno.Addr} remoteAddr
+	 * @param {Deno.ServeHandlerInfo<Deno.NetAddr>} info
 	 */
-	async handleRequest(request, remoteAddr) {
+	async handleRequest(request, info) {
+		const remoteAddr = info.remoteAddr;
 		if (this.#overrideRequestHandler) {
 			const response = await this.#overrideRequestHandler(request);
 			if (response) return response;
@@ -191,7 +97,7 @@ export class WebSocketHoster {
 			ip = remoteAddr.hostname;
 		}
 		const { socket, response } = Deno.upgradeWebSocket(request);
-		socket.addEventListener("open", (e) => {
+		socket.addEventListener("open", (_) => {
 			this.#onConnectionCb(socket, ip);
 		});
 		return response;

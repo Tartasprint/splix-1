@@ -160,7 +160,7 @@ export class PersistentWebSocket {
 				hasConnectedOnce = true;
 				r(true);
 			};
-			ws.onclose = (e) => {
+			ws.onclose = () => {
 				if (this.ws != ws) return;
 				if (this._cbsConnectedState) {
 					this._cbsConnectedState = false;
@@ -184,7 +184,7 @@ export class PersistentWebSocket {
 		}
 
 		const ws = new WebSocket(this.url);
-		const success = await new Promise((/** @type {(result: boolean) => void} */ resolve, reject) => {
+		const success = await new Promise((/** @type {(result: boolean) => void} */ resolve) => {
 			ws.onopen = () => {
 				ws.send(JSON.stringify(this.pingMessageData));
 			};

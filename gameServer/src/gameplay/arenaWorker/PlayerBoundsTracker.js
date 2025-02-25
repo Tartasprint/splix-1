@@ -1,4 +1,3 @@
-import { Vec2 } from "../../../../renda/mod.js";
 /**
  * Keeps track of the bounding boxes of player areas.
  * We don't want to perform flood fill operations on the entire arena.
@@ -73,7 +72,7 @@ export class PlayerBoundsTracker {
 	/**
 	 * Expands the bounding box of a player.
 	 * @param {number} playerId
-	 * @param {Vec2} point
+	 * @param {import("../../../../renda/mod.js").Vec2} point
 	 */
 	expandBoundsWithPoint(playerId, point) {
 		this.expandBoundsWithRect(playerId, {

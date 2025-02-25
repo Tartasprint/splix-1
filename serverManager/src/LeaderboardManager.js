@@ -1,5 +1,4 @@
 import { LeaderboardGroup } from "./LeaderboardGroup.js";
-import { PersistentStorage } from "./PersistentStorage.js";
 
 /**
  * @typedef PlayerScoreData
@@ -32,7 +31,7 @@ export class LeaderboardManager {
 	#persistentStorage;
 
 	/**
-	 * @param {PersistentStorage} persistentStorage
+	 * @param {import('./PersistentStorage.js').PersistentStorage} persistentStorage
 	 */
 	constructor(persistentStorage) {
 		this.#persistentStorage = persistentStorage;

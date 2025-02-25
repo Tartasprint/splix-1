@@ -6,4 +6,5 @@ export type GetFirstParam<T> = T extends [infer P] ? P : never;
  * single parameter. The added signature takes only one parameter, which is
  * the union of first parameters.
  */
-export type MergeParameters<T extends (...args: any) => any> = Parameters<T> | [GetFirstParam<Parameters<T>>];
+//deno-lint-ignore no-explicit-any
+export type MergeParameters<T extends (...args: any[]) => any> = Parameters<T> | [GetFirstParam<Parameters<T>>];

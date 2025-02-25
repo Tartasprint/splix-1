@@ -3,8 +3,6 @@ import { terser } from "../shared/rollup-terser-plugin.js";
 import alias from "$rollup-plugin-alias";
 import * as path from "jsr:@std/path";
 import { copy, ensureDir } from "jsr:@std/fs";
-import * as streams from "jsr:@std/streams";
-import { Tar } from "jsr:@std/archive";
 import { setCwd } from "./chdir_anywhere.js";
 import { tar_dir } from "./tar.js";
 setCwd();
@@ -28,7 +26,7 @@ const bundle = await rollup({
 		console.error(message.message);
 	},
 	plugins: [
-		alias({
+		alias.default({
 			entries: [
 				{
 					find: "renda",
@@ -68,4 +66,4 @@ await Deno.writeTextFile(path.resolve(distDir, "index.html"), indexContent);
 await copy("style.css", path.resolve(distDir, "style.css"));
 
 // Archive all files
-tar_dir(distDir,"./out/adminPanel.tar")
+tar_dir(distDir, "./out/adminPanel.tar");

@@ -1,7 +1,6 @@
 import { clamp, TypedMessenger } from "../../renda/mod.js";
 import { initializeControlSocketMessage } from "../../gameServer/src/WebSocketConnection.js";
 import { PersistentWebSocket } from "../../shared/PersistentWebSocket.js";
-import { LeaderboardManager } from "./LeaderboardManager.js";
 
 /**
  * @typedef GameServerConfig
@@ -27,7 +26,7 @@ import { LeaderboardManager } from "./LeaderboardManager.js";
 
 /**
  * @param {GameServer} gameServer
- * @param {LeaderboardManager} leaderboardManager
+ * @param {import('./LeaderboardManager.js').LeaderboardManager} leaderboardManager
  */
 function createResponseHandlers(gameServer, leaderboardManager) {
 	return {
@@ -65,7 +64,7 @@ export class GameServer {
 	#displayName = "";
 	#endpoint = "";
 	#validEndpoint = false;
-	/** @type {PersistentWebSocket<import("../../renda/mod.js").TypedMessengerMessageSendData<ServerManagerResponseHandlers, import("../../gameServer/src/ControlSocketConnection.js").ControlSocketResponseHandlers>>?} */
+	/** @type {PersistentWebSocket<import("../../renda/TypeMessenger.js").TypedMessengerMessageSendData<ServerManagerResponseHandlers, import("../../gameServer/src/ControlSocketConnection.js").ControlSocketResponseHandlers>>?} */
 	#persistentWebSocket = null;
 	/** @type {TypedMessenger<ServerManagerResponseHandlers, import("../../gameServer/src/ControlSocketConnection.js").ControlSocketResponseHandlers>} */
 	#messenger = new TypedMessenger();
@@ -74,7 +73,7 @@ export class GameServer {
 
 	/**
 	 * @param {number} id
-	 * @param {LeaderboardManager} leaderboardManager
+	 * @param {import('./LeaderboardManager.js').LeaderboardManager} leaderboardManager
 	 */
 	constructor(id, leaderboardManager) {
 		this.#id = id;

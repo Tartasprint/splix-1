@@ -1,6 +1,5 @@
 import { TypedMessenger, Vec2 } from "../../../renda/mod.js";
 import { clampRect, compressTiles, createArenaTiles, deserializeRect, fillRect } from "../util/util.js";
-import { PLAYER_SPAWN_RADIUS } from "../config.js";
 
 /**
  * @typedef FilledAreaMessageData
@@ -11,6 +10,7 @@ import { PLAYER_SPAWN_RADIUS } from "../config.js";
 /**
  * @typedef WorkerArenaHandlers
  * @property {(areas: FilledAreaMessageData[]) => void} notifyAreasFilled
+ * @property {(id: number) => void} fill_spawn_finished
  */
 
 /** @typedef {(rect: import("../util/util.js").Rect, tileValue: number) => void} OnRectFilledCallback */
@@ -42,10 +42,10 @@ export class Arena {
 	/**
 	 * @param {number} width
 	 * @param {number} height
- 	 * @param {boolean[][]} walls
+	 * @param {boolean[][]} walls
 	 * @param {import('./Game.js').Game} game
 	 */
-	constructor(width, height, walls,game) {
+	constructor(width, height, walls, game) {
 		this.#width = width;
 		this.#height = height;
 
@@ -65,9 +65,9 @@ export class Arena {
 					});
 				}
 			},
-			fill_spawn_finished: (id)=>{
+			fill_spawn_finished: (id) => {
 				game.playerFinishSpawn(id);
-			}
+			},
 		});
 		this.#messenger.send.init(width, height, walls);
 	}
@@ -165,7 +165,7 @@ export class Arena {
 			const tileValue = this.#tiles[x][y];
 			const tileData = convertTileDataCb(tileValue);
 			const key = tileData.colorId + "-" + tileData.patternId;
-			let ref = tileDataRefs.get(key);
+			const ref = tileDataRefs.get(key);
 			if (ref) return ref;
 			tileDataRefs.set(key, tileData);
 			return tileData;

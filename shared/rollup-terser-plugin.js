@@ -8,7 +8,7 @@ import { minify } from "$terser";
 export function terser(minifyOptions = {}) {
 	return {
 		name: "terser",
-		async renderChunk(code, chunk, outputOptions) {
+		async renderChunk(code, _chunk, _outputOptions) {
 			const output = await minify(code, minifyOptions);
 			if (!output.code) return null;
 			return {

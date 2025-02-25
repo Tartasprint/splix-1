@@ -1,5 +1,3 @@
-import { Main } from "./Main.js";
-
 /**
  * @typedef LegacyServerData
  * @property {string} ipv6
@@ -18,7 +16,7 @@ export class LegacyServerManager {
 	};
 
 	/**
-	 * @param {Main} mainInstance
+	 * @param {import('./Main.js').Main} mainInstance
 	 */
 	constructor(mainInstance) {
 		this.#mainInstance = mainInstance;

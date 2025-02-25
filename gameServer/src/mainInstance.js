@@ -64,17 +64,19 @@ if (import.meta.main) {
 		const port = args.p || args.port || 8080;
 		const hostname = args.h || args.hostname || "127.0.0.1";
 		let config;
-		if((typeof args.map === 'string' || args.map instanceof String) && args.map.length > 0){
-			config = yaml_parse((new TextDecoder('utf-8')).decode(Deno.readFileSync(args.map)));
+		if ((typeof args.map === "string") && args.map.length > 0) {
+			config = yaml_parse((new TextDecoder("utf-8")).decode(Deno.readFileSync(args.map)));
+			if (typeof config !== "object" || config === null) {
+				Deno.exit(1); // TODO: Error message
+			}
 		} else {
 			config = {};
 		}
-		let arenaWidth = parseInt(args.arenaWidth || config.Width || 100);
-		let arenaHeight = parseInt(args.arenaHeight || config.Height|| 100);
-		const arenaSize = parseInt(args.s || args.arenaSize || config.Size || 0);
+		let arenaWidth = parseInt(args.arenaWidth || ("Width" in config && config.Width) || 100);
+		let arenaHeight = parseInt(args.arenaHeight || ("Height" in config && config.Height) || 100);
+		const arenaSize = parseInt(args.s || args.arenaSize || ("Size" in config && config.Size) || 0);
 
-		const walls = config.Map || "";
-		const gameMode = args.g || args.gameMode || config.GameMode || "default";
+		const gameMode = args.g || args.gameMode || ("GameMode" in config && config.GameMode) || "default";
 		if (!validGamemodes.includes(gameMode)) {
 			throw new Error(`"${gameMode}" is not a valid gamemode.`);
 		}
@@ -82,6 +84,8 @@ if (import.meta.main) {
 			arenaWidth = arenaSize;
 			arenaHeight = arenaSize;
 		}
+		const walls = ("Map" in config && config.Map) || "";
+		if (typeof walls !== "string") throw new Error("Expected a string in the config for the key Map.");
 		const main = init({
 			arenaWidth,
 			arenaHeight,

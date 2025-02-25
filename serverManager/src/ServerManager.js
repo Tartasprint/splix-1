@@ -1,5 +1,4 @@
 import { GameServer } from "./GameServer.js";
-import { LeaderboardManager } from "./LeaderboardManager.js";
 
 /**
  * @typedef {{id: number, config: import("./GameServer.js").GameServerConfig}[]} GameServerConfigs

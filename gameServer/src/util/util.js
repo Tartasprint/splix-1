@@ -15,8 +15,8 @@ export function createArenaTiles(width, height, walls = []) {
 		tiles.push(column);
 	}
 
-	for(let y = 0; y<Math.min(height,walls.length); y++){
-		for(let x = 0; x<Math.min(width,walls[y].length); x++){
+	for (let y = 0; y < Math.min(height, walls.length); y++) {
+		for (let x = 0; x < Math.min(width, walls[y].length); x++) {
 			tiles[x][y] = walls[y][x] ? -1 : 0;
 		}
 	}
@@ -68,7 +68,7 @@ export function fillRect(tiles, tilesWidth, tilesHeight, rect, value) {
 			tiles[x][y] = value;
 		}
 	}
-	return (rect.max.x-rect.min.x)*(rect.max.y-rect.min.y);
+	return (rect.max.x - rect.min.x) * (rect.max.y - rect.min.y);
 }
 
 /**

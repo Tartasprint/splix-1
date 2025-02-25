@@ -31,8 +31,8 @@ export class WebSocketConnection {
 	/**
 	 * @param {string} data
 	 */
-	onMessage(data) {
-		this.#messenger.handleReceivedMessage(JSON.parse(data));
+	async onMessage(data) {
+		await this.#messenger.handleReceivedMessage(JSON.parse(data));
 	}
 
 	get authenticated() {

@@ -2,36 +2,36 @@
 
 name: ci
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 env:
-  # be sure to also update these in other workflows
-  DENO_DIR: deno_dir
-  DENO_VERSION: "1.37.0"
+    # be sure to also update these in other workflows
+    DENO_DIR: deno_dir
+    DENO_VERSION: "1.37.0"
 
 jobs:
-  Check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup repo
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+    Check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup repo
+              uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
 
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1.1.2
-        with:
-          deno-version: v1.37.0
+            - name: Setup Deno
+              uses: denoland/setup-deno@v1.1.2
+              with:
+                  deno-version: v1.37.0
 
-      - name: fmt
-        run: deno fmt --check
+            - name: fmt
+              run: deno fmt --check
 
-      - name: Install Dependencies
-        run: deno task install-deps
+            - name: Install Dependencies
+              run: deno task install-deps
 
-      - name: Check Types
-        run: deno task check
+            - name: Check Types
+              run: deno task check
 
-      - name: Build
-        run: deno task build-gameserver --target linux
+            - name: Build
+              run: deno task build-gameserver --target linux
