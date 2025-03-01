@@ -43,9 +43,8 @@ export class Arena {
 	 * @param {number} width
 	 * @param {number} height
 	 * @param {boolean[][]} walls
-	 * @param {import('./Game.js').Game} game
 	 */
-	constructor(width, height, walls, game) {
+	constructor(width, height, walls) {
 		this.#width = width;
 		this.#height = height;
 
@@ -64,9 +63,6 @@ export class Arena {
 						cb(rect, area.tileValue);
 					});
 				}
-			},
-			fill_spawn_finished: (id) => {
-				game.playerFinishSpawn(id);
 			},
 		});
 		this.#messenger.send.init(width, height, walls);

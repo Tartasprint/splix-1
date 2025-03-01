@@ -65,7 +65,7 @@ export class Game {
 	} = {}) {
 		this.#gameMode = gameMode;
 		this.#spawns = spawns;
-		this.#arena = new Arena(arenaWidth, arenaHeight, walls, this);
+		this.#arena = new Arena(arenaWidth, arenaHeight, walls);
 		this.#arena.onRectFilled((rect, tileValue) => {
 			for (const player of this.getOverlappingViewportPlayersForRect(rect)) {
 				const { colorId, patternId } = this.getTileTypeForMessage(player, tileValue);
@@ -137,14 +137,6 @@ export class Game {
 		this.#players.set(id, player);
 		this.#fireOnPlayerCountChange();
 		return player;
-	}
-
-	/**
-	 * Called when the player's spawn animation has finished.
-	 * @param {number} id the id of the player concerned.
-	 */
-	playerFinishSpawn(id) {
-		this.#players.get(id)?.finishSpawn();
 	}
 
 	/**

@@ -5,7 +5,6 @@ import { fillRect } from "../../util/util.js";
 import { initializeMask, updateCapturedArea } from "./updateCapturedArea.js";
 import { PlayerBoundsTracker } from "./PlayerBoundsTracker.js";
 import { getMinimapPart } from "./getMinimapPart.js";
-import { filling_spawn, running } from "./animations.js";
 
 /**
  * Stores which tiles have been filled and by which player.
@@ -65,8 +64,7 @@ const arenaWorkerHandlers = {
 		}));
 		messenger.send.notifyAreasFilled(tiles);
 		boundsTracker.initializePlayer(playerId, rect);
-		const anim_id = filling_spawn(fillTilesRect, messenger, x, y + 1, playerId, 5_000, 2000, 2_000);
-		return { count, anim_id };
+		return { count };
 	},
 
 	/**

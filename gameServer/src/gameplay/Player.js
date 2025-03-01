@@ -184,11 +184,6 @@ export class Player {
 	 */
 	#inOtherPlayerViewports = new Set();
 
-	/**
-	 * The id of the animation of spawn.
-	 */
-	#spawnAnimId = -1;
-
 	*inOtherPlayerViewports() {
 		yield* this.#inOtherPlayerViewports;
 	}
@@ -240,9 +235,8 @@ export class Player {
 			}
 		});
 
-		game.arena.fillPlayerSpawn(this.#currentPosition, id).then(({ count, anim_id }) => {
+		game.arena.fillPlayerSpawn(this.#currentPosition, id).then(({ count }) => {
 			this.#setCapturedTileCount(count);
-			this.#spawnAnimId = anim_id;
 		});
 
 		this.#joinTime = performance.now();
@@ -251,10 +245,6 @@ export class Player {
 		this.#rank = game.getPlayerCount() + 1;
 		this.#highestRank = this.#rank;
 		this.#sendMyRank();
-	}
-
-	finishSpawn() {
-		this.#spawnAnimId = -1;
 	}
 
 	get id() {
@@ -897,7 +887,6 @@ export class Player {
 
 	#permanentlyDie() {
 		if (this.#permanentlyDead) return;
-		this.game.arena.stopAnimation(this.#spawnAnimId);
 		this.#permanentlyDead = true;
 		this.#permanentlyDieTime = performance.now();
 		this.#clearAllMyTiles();
